@@ -1,6 +1,9 @@
 import React from 'react'
 import { useState } from "react";
 import Datepicker from "react-tailwindcss-datepicker";
+import sortMenuLogo from '../assets/sortMenu.svg'
+import Tick from '../assets/blueTick.png'
+
 
 const Home = () => {
     const [value, setValue] = useState({
@@ -8,40 +11,40 @@ const Home = () => {
         endDate: null
     })
     //const AccountTable = () => {  
-        const accountData = [  
-            {  
-                accountNumber: '1084227031332',  
-                name: 'John Doe',  
-                verifyProcessStatus: '✔️ ✔️',  
-                initiatedDate: '10/10/2024 19:25',  
-                remark: 'Approved',  
-                accountStatus: 'Processed',  
-                processStatus: 'Approved',
-                view: '-',  
-            },  
-            {  
-                accountNumber: '1084227031333',  
-                name: 'Jane Smith',  
-                verifyProcessStatus: '✔️ ❌',  
-                initiatedDate: '10/10/2024 19:26',  
-                remark: 'Rejected - Date of Birth is missing',  
-                accountStatus: 'Processed',  
-                processStatus: 'Rejected',  
-                view: '-',
-            },  
-            {  
-                accountNumber: '1084227031334',  
-                name: 'Mike Johnson',  
-                verifyProcessStatus: '✔️ ✔️',  
-                initiatedDate: '10/10/2024 19:27',  
-                remark: 'Approved',  
-                accountStatus: 'Processed',  
-                processStatus: 'Approved',  
-                view: '-',
-            },  
-        ];  
+    const accountData = [
+        {
+            accountNumber: '1084227031332',
+            name: 'John Doe',
+            verifyProcessStatus: Tick,
+            initiatedDate: '10/10/2024 19:25',
+            remark: 'Approved',
+            accountStatus: 'Processed',
+            processStatus: 'Approved',
+            view: '-',
+        },
+        {
+            accountNumber: '1084227031333',
+            name: 'Jane Smith',
+            verifyProcessStatus: '✔️ ❌',
+            initiatedDate: '10/10/2024 19:26',
+            remark: 'Rejected - Date of Birth is missing',
+            accountStatus: 'Processed',
+            processStatus: 'Rejected',
+            view: '-',
+        },
+        {
+            accountNumber: '1084227031334',
+            name: 'Mike Johnson',
+            verifyProcessStatus: '✔️ ✔️',
+            initiatedDate: '10/10/2024 19:27',
+            remark: 'Approved',
+            accountStatus: 'Processed',
+            processStatus: 'Approved',
+            view: '-',
+        },
+    ];
     //};
-    
+
 
 
     return (
@@ -89,48 +92,47 @@ const Home = () => {
                 </div>
             </nav>
 
-
-
-            <div className="flex justify-between px-20">
-                <button
-                    className="bg-white border border-gray-300 rounded-lg p-4 shadow-md cursor-pointer transition-shadow duration-150 ease-in-out hover:shadow-lg active:shadow-xl focus:outline-none"
-                    onClick={() => console.log('Approved clicked')}
-                >
-                    <div className="text-blue-600 text-2xl font-bold">22,997</div>
-                    <div className="text-gray-700">Approved</div>
-                </button>
-                <button
-                    className="bg-white border border-gray-300 rounded-lg p-4 shadow-md cursor-pointer transition-shadow duration-150 ease-in-out hover:shadow-lg active:shadow-xl focus:outline-none"
-                    onClick={() => console.log('Processed clicked')}
-                >
-                    <div className="text-green-600 text-2xl font-bold">24,157</div>
-                    <div className="text-gray-700">Processed</div>
-                </button>
-                <button
-                    className="bg-white border border-gray-300 rounded-lg p-4 shadow-md cursor-pointer transition-shadow duration-150 ease-in-out hover:shadow-lg active:shadow-xl focus:outline-none"
-                    onClick={() => console.log('Rejected clicked')}
-                >
-                    <div className="text-orange-600 text-2xl font-bold">1,160</div>
-                    <div className="text-gray-700">Rejected</div>
-                </button>
-                <button
-                    className="bg-white border border-gray-300 rounded-lg p-4 shadow-md cursor-pointer transition-shadow duration-150 ease-in-out hover:shadow-lg active:shadow-xl focus:outline-none"
-                    onClick={() => console.log('Rejected clicked')}
-                >
-                    <div className="text-red-600 text-2xl font-bold">1,160</div>
-                    <div className="text-gray-700">Rejected</div>
-                </button>
-            </div>
-
-
-
-
-
             <div>
+                <div className="flex justify-between px-20">
+                    <button
+                        className="bg-white border border-gray-300 rounded-lg p-4 shadow-md cursor-pointer transition-shadow duration-150 ease-in-out hover:shadow-lg active:shadow-xl focus:outline-none"
+                        onClick={() => console.log('Approved clicked')}
+                    >
+                        <div className="text-blue-600 text-2xl font-bold">22,997</div>
+                        <div className="text-gray-700">Approved</div>
+                    </button>
+                    <button
+                        className="bg-white border border-gray-300 rounded-lg p-4 shadow-md cursor-pointer transition-shadow duration-150 ease-in-out hover:shadow-lg active:shadow-xl focus:outline-none"
+                        onClick={() => console.log('Processed clicked')}
+                    >
+                        <div className="text-green-600 text-2xl font-bold">24,157</div>
+                        <div className="text-gray-700">Processed</div>
+                    </button>
+                    <button
+                        className="bg-white border border-gray-300 rounded-lg p-4 shadow-md cursor-pointer transition-shadow duration-150 ease-in-out hover:shadow-lg active:shadow-xl focus:outline-none"
+                        onClick={() => console.log('Rejected clicked')}
+                    >
+                        <div className="text-orange-400 text-2xl font-bold">1,160</div>
+                        <div className="text-gray-700">Rejected</div>
+                    </button>
+                    <button
+                        className="bg-white border border-gray-300 rounded-lg p-4 shadow-md cursor-pointer transition-shadow duration-150 ease-in-out hover:shadow-lg active:shadow-xl focus:outline-none"
+                        onClick={() => console.log('Rejected clicked')}
+                    >
+                        <div className="text-red-600 text-2xl font-bold">1,160</div>
+                        <div className="text-gray-700">Failed</div>
+                    </button>
+                </div>
 
-                Body
 
-                <div className="flex items-center p-4">
+
+
+
+
+
+
+
+                <div className="flex justify-between px-20 m-8">
 
                     <div id="date-range-picker" date-rangepicker className="flex items-center">
                         <div className="relative">
@@ -188,13 +190,16 @@ const Home = () => {
                     </div>
 
 
-                    
-                    
-                </div>
-                
-                <div className='pt-3 pb-4 rounded-sm border border-grey-200 flex-1'>
 
-                    <div mt-3>
+
+                </div>
+            </div>
+
+
+
+            <div className='pt-3 pb-4 rounded-sm border border-grey-200 flex-1'>
+
+                <div className="overflow-x-auto mt-4 flex justify-center flex-col items-center relative">
                     <table className='min-w-full rounded-lg border border-solid border-gray-border min-h-32 accounttable'>
                         <thead>
                             <tr>
@@ -209,29 +214,29 @@ const Home = () => {
                             </tr>
                         </thead>
                         <tbody>
-                        {accountData.map((order)=>(
-                        <tr key={order.accountNumber}>
-                            <td>{order.accountNumber}</td>
-                            <td>{order.name}</td>
-                            <td>{order.verifyProcessStatus}</td>
-                            <td>{order.initiatedDate}</td>
-                            <td>{order.remark}</td>
-                            <td>{order.accountStatus}</td>
-                            <td>{order.processStatus}</td>
-                            <td>{order.view}</td>
+                            {accountData.map((order) => (
+                                <tr key={order.accountNumber}>
+                                    <td>{order.accountNumber}</td>
+                                    <td>{order.name}</td>
+                                    <td>{order.verifyProcessStatus}</td>
+                                    <td>{order.initiatedDate}</td>
+                                    <td>{order.remark}</td>
+                                    <td>{order.accountStatus}</td>
+                                    <td>{order.processStatus}</td>
+                                    <td>{order.view}</td>
 
-                        </tr>
-                    ))}
+                                </tr>
+                            ))}
                         </tbody>
                     </table>
 
-                    
-                    </div>
-
-                    
 
                 </div>
+
+
+
             </div>
+
 
         </div>
     )
