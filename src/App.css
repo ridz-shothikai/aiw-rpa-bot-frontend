@@ -1,0 +1,9 @@
+input:focus + .input-progress {
+  background-color: #02839f; /* Tailwind's blue-500 */
+  width: 100%;
+}
+
+input + .input-progress {
+  width: 0;
+  background-color: #02839f;
+}
