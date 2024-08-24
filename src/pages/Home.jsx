@@ -1,244 +1,282 @@
-import React from 'react'
-import { useState } from "react";
-import Datepicker from "react-tailwindcss-datepicker";
-import sortMenuLogo from '../assets/sortMenu.svg'
-import Tick from '../assets/blueTick.png'
-
+import React, { useState } from 'react';
+import Navbar from '../components/Navbar';
+import DatePicker from 'react-datepicker';
+import SearchBar from '../components/SearchBar'; // Import the SearchBar component
+import sortMenuLogo from '../assets/sortMenu.svg';
+import Tick from '../assets/blueTick.png';
+import Cross from '../assets/cross.png';
+import GWarning from '../assets/grayWarning.png';
+import YWarning from '../assets/yellowWarning.png';
+import View from '../assets/view.png';
+import Hide from '../assets/hide.png'
+import 'react-datepicker/dist/react-datepicker.css';
 
 const Home = () => {
-    const [value, setValue] = useState({
-        startDate: null,
-        endDate: null
-    })
-    //const AccountTable = () => {  
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false); // State for controlling the modal
+
+    // Function to clear the dates
+    const clearDates = () => {
+        setStartDate(null);
+        setEndDate(null);
+    };
+
+    // Function to open the modal
+    const openModal = () => {
+        setIsModalOpen(true);
+    };
+
+    // Function to close the modal
+    const closeModal = () => {
+        setIsModalOpen(false);
+    };
+
+    // Function to handle the download action
+    const handleDownload = () => {
+        // Implement your download logic here with the selected startDate and endDate
+        console.log('Downloading report from', startDate, 'to', endDate);
+        closeModal(); // Close the modal after download
+    };
+
     const accountData = [
+        // Sample data for table
         {
             accountNumber: '1084227031332',
             name: 'John Doe',
-            verifyProcessStatus: Tick,
+            verifyProcessStatus: <div className="flex justify-center items-center ">
+                <img src={Tick} alt="Tick" className="w-5 h-5 mr-3" />
+                <img src={Tick} alt="Tick" className="w-5 h-5 mr-3" />
+                <img src={Tick} alt="Tick" className="w-5 h-5 mr-3" />
+                <img src={Tick} alt="Tick" className="w-5 h-5" />
+            </div>,
             initiatedDate: '10/10/2024 19:25',
             remark: 'Approved',
             accountStatus: 'Processed',
             processStatus: 'Approved',
-            view: '-',
+            view: <div className='flex justify-center items-center'>
+                <img src={View} alt="view" className='w-5 h-5' />
+            </div>,
+
         },
         {
             accountNumber: '1084227031333',
             name: 'Jane Smith',
-            verifyProcessStatus: '✔️ ❌',
+            verifyProcessStatus: <div className="flex justify-center items-center ">
+            <img src={Tick} alt="Tick" className="w-5 h-5 mr-3" />
+            <img src={Tick} alt="Tick" className="w-5 h-5 mr-3" />
+            <img src={Cross} alt="Tick" className="w-5 h-5 mr-3" />
+            <img src={Tick} alt="Tick" className="w-5 h-5" />
+        </div>,
             initiatedDate: '10/10/2024 19:26',
             remark: 'Rejected - Date of Birth is missing',
             accountStatus: 'Processed',
             processStatus: 'Rejected',
-            view: '-',
+            view: <div className='flex justify-center items-center'>
+            <img src={View} alt="view" className='w-5 h-5' />
+        </div>,
         },
         {
             accountNumber: '1084227031334',
             name: 'Mike Johnson',
-            verifyProcessStatus: '✔️ ✔️',
+            verifyProcessStatus: <div className="flex justify-center items-center ">
+            <img src={Tick} alt="Tick" className="w-5 h-5 mr-3" />
+            <img src={GWarning} alt="Tick" className="w-6 h-6 mr-3" />
+            <img src={Tick} alt="Tick" className="w-5 h-5 mr-3" />
+            <img src={YWarning} alt="Tick" className="w-6 h-6" />
+        </div>,
             initiatedDate: '10/10/2024 19:27',
             remark: 'Approved',
             accountStatus: 'Processed',
             processStatus: 'Approved',
-            view: '-',
+            view: <div className='flex justify-center items-center'>
+            <img src={Hide} alt="view" className='w-5 h-5' />
+        </div>,
         },
+        // Add more rows as needed
     ];
-    //};
 
-
+    // Search handler
+    const handleSearch = (event) => {
+        event.preventDefault();
+        const query = event.target.elements['simple-search'].value;
+        console.log("Search query:", query);
+        // Add your search logic here
+    };
 
     return (
-        <div>
+        <div className='bg-gray-200'>
+            <Navbar />
+            <div className='min-h-screen px-8'>
+                <div className='min-h-screen'>
+                    {/* Main Content */}
+                    <div>
+                        <div className="flex flex-wrap justify-between py-[130px] gap-[100px] ">
+                            <button
+                                className="bg-white border border-gray-300 flex-1 rounded-lg p-4 shadow-md cursor-pointer transition-shadow duration-150 ease-in-out hover:shadow-lg active:shadow-xl focus:outline-none"
+                                onClick={() => console.log('Approved clicked')}
+                            >
+                                <div className="text-blue-600 text-2xl font-bold">22,997</div>
+                                <div className="text-gray-700 font-bold ">Approved</div>
+                            </button>
 
-
-            <nav className="bg-white border-gray-200 dark:bg-gray-900">
-                <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-                    <a href="https://flowbite.com/" className="flex items-center space-x-3 rtl:space-x-reverse">
-                        <img src="/src/assets/logo.png" className="h-8" alt=" Logo" />
-                        <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Name</span>
-                    </a>
-                    <div className="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-                        <button type="button" className="flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
-                            <span className="sr-only">Open user menu</span>
-                            <img className="w-8 h-8 rounded-full" src="/docs/images/people/profile-picture-3.jpg" alt="user photo" />
-                        </button>
-
-                        <button data-collapse-toggle="navbar-user" type="button" className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-user" aria-expanded="false">
-                            <span className="sr-only">Open main menu</span>
-                            <svg className="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15" />
-                            </svg>
-                        </button>
-                    </div>
-                    <div className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-user">
-                        <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-                            <li>
-                                <a href="#" className="block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500" aria-current="page"></a>
-                            </li>
-                            <li>
-                                <a href="#" className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"></a>
-                            </li>
-                            <li>
-                                <a href="#" className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"></a>
-                            </li>
-                            <li>
-                                <a href="#" className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"></a>
-                            </li>
-                            <li>
-                                <a href="#" className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"></a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </nav>
-
-            <div>
-                <div className="flex justify-between px-20">
-                    <button
-                        className="bg-white border border-gray-300 rounded-lg p-4 shadow-md cursor-pointer transition-shadow duration-150 ease-in-out hover:shadow-lg active:shadow-xl focus:outline-none"
-                        onClick={() => console.log('Approved clicked')}
-                    >
-                        <div className="text-blue-600 text-2xl font-bold">22,997</div>
-                        <div className="text-gray-700">Approved</div>
-                    </button>
-                    <button
-                        className="bg-white border border-gray-300 rounded-lg p-4 shadow-md cursor-pointer transition-shadow duration-150 ease-in-out hover:shadow-lg active:shadow-xl focus:outline-none"
-                        onClick={() => console.log('Processed clicked')}
-                    >
-                        <div className="text-green-600 text-2xl font-bold">24,157</div>
-                        <div className="text-gray-700">Processed</div>
-                    </button>
-                    <button
-                        className="bg-white border border-gray-300 rounded-lg p-4 shadow-md cursor-pointer transition-shadow duration-150 ease-in-out hover:shadow-lg active:shadow-xl focus:outline-none"
-                        onClick={() => console.log('Rejected clicked')}
-                    >
-                        <div className="text-orange-400 text-2xl font-bold">1,160</div>
-                        <div className="text-gray-700">Rejected</div>
-                    </button>
-                    <button
-                        className="bg-white border border-gray-300 rounded-lg p-4 shadow-md cursor-pointer transition-shadow duration-150 ease-in-out hover:shadow-lg active:shadow-xl focus:outline-none"
-                        onClick={() => console.log('Rejected clicked')}
-                    >
-                        <div className="text-red-600 text-2xl font-bold">1,160</div>
-                        <div className="text-gray-700">Failed</div>
-                    </button>
-                </div>
-
-
-
-
-
-
-
-
-
-                <div className="flex justify-between px-20 m-8">
-
-                    <div id="date-range-picker" date-rangepicker className="flex items-center">
-                        <div className="relative">
-                            <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                                <svg className="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
-                                </svg>
-                            </div>
-                            <input id="datepicker-range-start" name="start" type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Select date start" />
+                            <button
+                                className="bg-white border border-gray-300 flex-1 rounded-lg p-4 shadow-md cursor-pointer transition-shadow duration-150 ease-in-out hover:shadow-lg active:shadow-xl focus:outline-none"
+                                onClick={() => console.log('Processed clicked')}
+                            >
+                                <div className="text-green-600 text-2xl font-bold">24,157</div>
+                                <div className="text-gray-700 font-bold ">Processed</div>
+                            </button>
+                            <button
+                                className="bg-white border border-gray-300 flex-1 rounded-lg p-4 shadow-md cursor-pointer transition-shadow duration-150 ease-in-out hover:shadow-lg active:shadow-xl focus:outline-none"
+                                onClick={() => console.log('Rejected clicked')}
+                            >
+                                <div className="text-orange-600 text-2xl font-bold">1,160</div>
+                                <div className="text-gray-700 font-bold ">Rejected</div>
+                            </button>
+                            <button
+                                className="bg-white border border-gray-300 flex-1 rounded-lg p-4 shadow-md cursor-pointer transition-shadow duration-150 ease-in-out hover:shadow-lg active:shadow-xl focus:outline-none"
+                                onClick={() => console.log('Rejected clicked')}
+                            >
+                                <div className="text-red-600 text-2xl font-bold">1,160</div>
+                                <div className="text-gray-700 font-bold ">Failed</div>
+                            </button>
                         </div>
-                        <span className="mx-4 text-gray-500">to</span>
-                        <div className="relative">
-                            <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                                <svg className="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
-                                </svg>
+
+                        <div className="flex justify-between items-center mt-4">
+                            <div>
+                                <div className="flex items-center ">
+                                    <div className="relative">
+                                        <DatePicker
+                                            selected={startDate}
+                                            onChange={(date) => setStartDate(date)}
+                                            selectsStart
+                                            startDate={startDate}
+                                            endDate={endDate}
+                                            placeholderText="Select start date"
+                                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5"
+                                        />
+                                    </div>
+                                    <span className="mx-4 text-gray-500">to</span>
+                                    <div className="relative">
+                                        <DatePicker
+                                            selected={endDate}
+                                            onChange={(date) => setEndDate(date)}
+                                            selectsEnd
+                                            startDate={startDate}
+                                            endDate={endDate}
+                                            minDate={startDate}
+                                            maxDate={new Date()}
+                                            placeholderText="Select end date"
+                                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5"
+                                        />
+                                    </div>
+                                    <button
+                                        onClick={clearDates}
+                                        className="flex items-center justify-center w-8 h-8 bg-transparent hover:bg-gray-200 rounded-full focus:outline-none"
+                                    >
+                                        <svg className="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+                                        </svg>
+                                    </button>
+                                </div>
                             </div>
-                            <input id="datepicker-range-end" name="end" type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Select date end" />
+                            <div>
+                                <SearchBar onSearch={handleSearch} /> {/* Added SearchBar component */}
+
+                            </div>
+                            <div className="flex items-center">
+                                <button onClick={openModal} className="bg-blue-500 hover:bg-blue-800 text-white rounded-md px-4 py-2 flex items-center ms-4">
+                                    Download Report
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="ml-2 w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V7M16 3l-4 4-4-4m4 4V1" />
+                                    </svg>
+                                </button>
+
+                                {/* Modal for Date Selection */}
+                                {isModalOpen && (
+                                    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                                        <div className="bg-white rounded-lg p-8 relative">
+                                            {/* Close button */}
+                                            <button onClick={closeModal} className="absolute top-2 right-2 text-gray-600 hover:text-gray-800">
+                                                <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                                                </svg>
+                                            </button>
+                                            <h2 className="text-lg font-bold mb-4">Select Date Range</h2>
+                                            <div className="flex items-center space-x-4">
+                                                <div className="relative">
+                                                    <DatePicker
+                                                        selected={startDate}
+                                                        onChange={(date) => setStartDate(date)}
+                                                        selectsStart
+                                                        startDate={startDate}
+                                                        endDate={endDate}
+                                                        placeholderText="Start date"
+                                                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5"
+                                                    />
+                                                </div>
+                                                <div className="relative">
+                                                    <DatePicker
+                                                        selected={endDate}
+                                                        onChange={(date) => setEndDate(date)}
+                                                        selectsEnd
+                                                        startDate={startDate}
+                                                        endDate={endDate}
+                                                        minDate={startDate}
+                                                        maxDate={new Date()}
+                                                        placeholderText="End date"
+                                                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className="flex justify-end mt-6">
+                                                <button onClick={handleDownload} className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-800">Download</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </div>
 
-                    <div className="ml-4">
-                        <button className="bg-black text-white rounded-md px-4 py-2 flex items-center">
-                            Download Report
-                            <svg xmlns="http://www.w3.org/2000/svg" className="ml-2 w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V7M16 3l-4 4-4-4m4 4V1" />
-                            </svg>
-                        </button>
+                    <div className=' pt-3 pb-4 rounded-sm flex-1'>
+                        <div className="overflow-x-auto mt-4 flex justify-center flex-col items-center relative">
+                            <table className='border-collapse border border-gray-300 p-6 min-w-full rounded-lg min-h-32 accounttable'>
+                                <thead className='font-bold bg-gray-100'>
+                                    <tr>
+                                        <th className='p-2 text-center'>Account Number</th>
+                                        <th className='p-2 text-center'>Name</th>
+                                        <th className='p-2 text-center'>Verify/Process Status</th>
+                                        <th className='p-2 text-center'>Initiated Date</th>
+                                        <th className='p-2 text-center'>Remark</th>
+                                        <th className='p-2 text-center'>Account Status</th>
+                                        <th className='p-2 text-center'>Process Status</th>
+                                        <th className='p-2 text-center'>View</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {accountData.map((order) => (
+                                        <tr key={order.accountNumber}>
+                                            <td className='p-2 text-center'>{order.accountNumber}</td>
+                                            <td className='p-2 text-center'>{order.name}</td>
+                                            <td className='p-2 text-center'>{order.verifyProcessStatus}</td>
+                                            <td className='p-2 text-center'>{order.initiatedDate}</td>
+                                            <td className='p-2 text-center'>{order.remark}</td>
+                                            <td className='p-2 text-center'>{order.accountStatus}</td>
+                                            <td className='p-2 text-center'>{order.processStatus}</td>
+                                            <td className='p-2 text-center'>{order.view}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+
                     </div>
-
-
-                    <div class="relative flex">
-                        <input
-                            type="search"
-                            class="relative m-0 block flex-auto rounded border border-solid border-neutral-200 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-surface outline-none transition duration-200 ease-in-out placeholder:text-neutral-500 focus:z-[3] focus:border-primary focus:shadow-inset focus:outline-none motion-reduce:transition-none dark:border-white/10 dark:text-white dark:placeholder:text-neutral-200 dark:autofill:shadow-autofill dark:focus:border-primary"
-                            placeholder="Search Account No."
-                            aria-label="Search"
-                            id="exampleFormControlInput2"
-                            aria-describedby="button-addon2" />
-                        <span
-                            class="flex items-center whitespace-nowrap px-3 py-[0.25rem] text-surface dark:border-neutral-400 dark:text-white [&>svg]:h-5 [&>svg]:w-5"
-                            id="button-addon2">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke-width="2"
-                                stroke="currentColor">
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-                            </svg>
-                        </span>
-                    </div>
-
-
-
-
                 </div>
             </div>
-
-
-
-            <div className='pt-3 pb-4 rounded-sm border border-grey-200 flex-1'>
-
-                <div className="overflow-x-auto mt-4 flex justify-center flex-col items-center relative">
-                    <table className='min-w-full rounded-lg border border-solid border-gray-border min-h-32 accounttable'>
-                        <thead>
-                            <tr>
-                                <td>Account Number</td>
-                                <td>Name</td>
-                                <td>Verify/Process Status</td>
-                                <td>Initiated Date</td>
-                                <td>Remark</td>
-                                <td>Account Status</td>
-                                <td>Process Status</td>
-                                <td>View</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {accountData.map((order) => (
-                                <tr key={order.accountNumber}>
-                                    <td>{order.accountNumber}</td>
-                                    <td>{order.name}</td>
-                                    <td>{order.verifyProcessStatus}</td>
-                                    <td>{order.initiatedDate}</td>
-                                    <td>{order.remark}</td>
-                                    <td>{order.accountStatus}</td>
-                                    <td>{order.processStatus}</td>
-                                    <td>{order.view}</td>
-
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-
-
-                </div>
-
-
-
-            </div>
-
-
         </div>
-    )
+    );
 };
+
 export default Home;
