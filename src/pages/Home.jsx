@@ -131,7 +131,7 @@ const Home = () => {
                                 className="bg-white border border-gray-300 flex-1 rounded-lg p-4 shadow-md cursor-pointer transition-shadow duration-150 ease-in-out hover:shadow-lg active:shadow-xl focus:outline-none"
                                 onClick={() => console.log('Rejected clicked')}
                             >
-                                <div className="text-orange-600 text-2xl font-bold">1,160</div>
+                                <div className="text-orange-500 text-2xl font-bold">1,160</div>
                                 <div className="text-gray-700 font-bold ">Rejected</div>
                             </button>
                             <button
