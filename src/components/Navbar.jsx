@@ -24,7 +24,7 @@ export default function Navbar() {
                 </div>
 
                 <button
-                    className="px-4 py-2 ml-4 rounded focus:outline-none"
+                    className=" font-bold px-4 py-2 ml-4 rounded focus:outline-none"
                     onClick={() => setDropdownOpen(!dropdownOpen)}
                 >
                     DoTech Ltd.
@@ -35,9 +35,7 @@ export default function Navbar() {
                         <a href="/logout" className="block px-4 py-2 text-gray-800 hover:bg-gray-200">
                             <FaSignOutAlt className="inline mr-2" /> Log Out
                         </a>
-                        <a href="/update-password" className="block px-4 py-2 text-gray-800 hover:bg-gray-200">
-                            <FaLock className="inline mr-2" /> Update Password
-                        </a>
+                        
                     </div>
                 )}
             </div>
