@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 import { DatePicker, Space } from 'antd';
-import dayjs from 'dayjs';
+
 import SearchBar from '../components/SearchBar';
-import sortMenuLogo from '../assets/sortMenu.svg';
+
 import Tick from '../assets/blueTick.png';
 import Cross from '../assets/cross.png';
 import GWarning from '../assets/grayWarning.png';
@@ -20,18 +20,13 @@ const Home = () => {
     const [selectedRange, setSelectedRange] = useState(null);
 
     const rangePresets = [
-        { label: 'Last 7 Days', value: [dayjs().add(-7, 'd'), dayjs()] },
-        { label: 'Last 14 Days', value: [dayjs().add(-14, 'd'), dayjs()] },
-        { label: 'Last 30 Days', value: [dayjs().add(-30, 'd'), dayjs()] },
-        { label: 'Last 90 Days', value: [dayjs().add(-90, 'd'), dayjs()] },
+        // { label: 'Last 7 Days', value: [dayjs().add(-7, 'd'), dayjs()] },
+        // { label: 'Last 14 Days', value: [dayjs().add(-14, 'd'), dayjs()] },
+        // { label: 'Last 30 Days', value: [dayjs().add(-30, 'd'), dayjs()] },
+        // { label: 'Last 90 Days', value: [dayjs().add(-90, 'd'), dayjs()] },
     ];
 
-    const toggleView = (accountNumber) => {
-        setViewState(prevState => ({
-            ...prevState,
-            [accountNumber]: !prevState[accountNumber]
-        }));
-    };
+    
 
     const accountData = [
         {
@@ -44,15 +39,16 @@ const Home = () => {
                 <img src={Tick} alt="Tick" className="w-5 h-5" />
             </div>,
             initiatedDate: '10/10/2024 19:25',
+            nid: 'Invalid',
             remark: 'Approved',
             accountStatus: 'Processed',
             processStatus: 'Approved',
             view: <div className='flex justify-center items-center'>
-                <img 
-                    src={viewState['1084227031332'] ? Hide : View} 
-                    alt="view" 
-                    className='w-5 h-5 cursor-pointer' 
-                    onClick={() => toggleView('1084227031332')} 
+                <img
+                    src={viewState['1084227031332'] ? Hide : View}
+                    alt="view"
+                    className='w-5 h-5 cursor-pointer'
+                    onClick={() => toggleView('1084227031332')}
                 />
             </div>,
         },
@@ -66,15 +62,16 @@ const Home = () => {
                 <img src={Tick} alt="Tick" className="w-5 h-5" />
             </div>,
             initiatedDate: '10/10/2024 19:26',
+            nid: 'Server Down',
             remark: 'Rejected - Date of Birth is missing',
             accountStatus: 'Processed',
             processStatus: 'Rejected',
             view: <div className='flex justify-center items-center'>
-                <img 
-                    src={viewState['1084227031333'] ? Hide : View} 
-                    alt="view" 
-                    className='w-5 h-5 cursor-pointer' 
-                    onClick={() => toggleView('1084227031333')} 
+                <img
+                    src={viewState['1084227031333'] ? Hide : View}
+                    alt="view"
+                    className='w-5 h-5 cursor-pointer'
+                    onClick={() => toggleView('1084227031333')}
                 />
             </div>,
         },
@@ -88,15 +85,16 @@ const Home = () => {
                 <img src={YWarning} alt="Warning" className="w-6 h-6" />
             </div>,
             initiatedDate: '10/10/2024 19:27',
+            nid: 'Verified',
             remark: 'Approved',
             accountStatus: 'Processed',
             processStatus: 'Approved',
             view: <div className='flex justify-center items-center'>
-                <img 
-                    src={viewState['1084227031334'] ? Hide : View} 
-                    alt="view" 
-                    className='w-5 h-5 cursor-pointer' 
-                    onClick={() => toggleView('1084227031334')} 
+                <img
+                    src={viewState['1084227031334'] ? Hide : View}
+                    alt="view"
+                    className='w-5 h-5 cursor-pointer'
+                    onClick={() => toggleView('1084227031334')}
                 />
             </div>,
         },
@@ -176,13 +174,14 @@ const Home = () => {
 
                     <div className="pt-3 pb-4 rounded-sm flex-1">
                         <div className="overflow-x-auto mt-4 flex justify-center flex-col items-center relative">
-                        <table className="table-auto w-full bg-white shadow-md rounded-md">
+                            <table className="table-auto w-full bg-white shadow-md rounded-md">
                                 <thead>
                                     <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
                                         <th className="py-3 px-6 text-left">Account Number</th>
                                         <th className="py-3 px-6 text-left">Name</th>
                                         <th className="py-3 px-6 text-center">Verification Status</th>
                                         <th className="py-3 px-6 text-center">Initiated Date</th>
+                                        <th className="py-3 px-6 text-center">NID Status</th>
                                         <th className="py-3 px-6 text-center">Remarks</th>
                                         <th className="py-3 px-6 text-center">Account Status</th>
                                         <th className="py-3 px-6 text-center">View</th>
@@ -191,25 +190,28 @@ const Home = () => {
                                 <tbody className="text-gray-700 text-sm font-light">
                                     {accountData.map((account, index) => (
                                         <tr key={index} className="border-b border-gray-200 hover:bg-gray-100">
-                                            <td className="py-3 px-6 text-left whitespace-nowrap">
+                                            <td className="py-3 px-6 text-left whitespace-nowrap font-medium">
                                                 {account.accountNumber}
                                             </td>
-                                            <td className="py-3 px-6 text-left">
+                                            <td className="py-3 px-6 text-left font-medium">
                                                 {account.name}
                                             </td>
-                                            <td className="py-3 px-6 text-center">
+                                            <td className="py-3 px-6 text-center font-medium">
                                                 {account.verifyProcessStatus}
                                             </td>
-                                            <td className="py-3 px-6 text-center">
+                                            <td className="py-3 px-6 text-center font-medium">
                                                 {account.initiatedDate}
                                             </td>
-                                            <td className="py-3 px-6 text-center">
+                                            <td className="py-3 px-6 text-center font-medium">
+                                                {account.nid}
+                                            </td>
+                                            <td className="py-3 px-6 text-center font-medium">
                                                 {account.remark}
                                             </td>
-                                            <td className="py-3 px-6 text-center">
+                                            <td className="py-3 px-6 text-center font-medium">
                                                 {account.accountStatus}
                                             </td>
-                                            <td className="py-3 px-6 text-center">
+                                            <td className="py-3 px-6 text-center font-medium">
                                                 {account.view}
                                             </td>
                                         </tr>
@@ -224,7 +226,18 @@ const Home = () => {
             {/* Modal for downloading report */}
             {isModalOpen && (
                 <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center">
-                    <div className="bg-white rounded-lg p-8">
+                    <div className="bg-white rounded-lg p-8 relative">
+                        {/* Close button  */}
+                        <button
+                            onClick={closeModal}
+                            className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
+                        >
+                            
+                            <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+
                         <h2 className="text-xl font-bold mb-4">Download Report</h2>
                         <p>Select the date range for the report:</p>
                         <Space direction="vertical" size={12}>
@@ -237,12 +250,7 @@ const Home = () => {
                             />
                         </Space>
                         <div className="mt-4 flex justify-end">
-                            <button
-                                onClick={closeModal}
-                                className="bg-red-500 text-white px-4 py-2 rounded-md mr-2"
-                            >
-                                Cancel
-                            </button>
+                            
                             <button
                                 onClick={() => {
                                     console.log('Downloading report for range: ', selectedRange);
@@ -253,6 +261,7 @@ const Home = () => {
                                 Download
                             </button>
                         </div>
+
                     </div>
                 </div>
             )}
