@@ -176,7 +176,7 @@ const Home = () => {
                         <div className="overflow-x-auto mt-4 flex justify-center flex-col items-center relative">
                             <table className="table-auto w-full bg-white shadow-md rounded-md">
                                 <thead>
-                                    <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                                    <tr className="bg-gray-300 text-gray-600  uppercase text-sm leading-normal">
                                         <th className="py-3 px-6 text-left">Account Number</th>
                                         <th className="py-3 px-6 text-left">Name</th>
                                         <th className="py-3 px-6 text-center">Verification Status</th>
