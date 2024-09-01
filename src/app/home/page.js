@@ -6,6 +6,7 @@ import { DatePicker, Space } from "antd";
 import SearchBar from "../../components/SearchBar"; // Adjust the import path
 
 import "antd/dist/reset.css";
+import Link from "next/link";
 
 const { RangePicker } = DatePicker;
 
@@ -36,12 +37,14 @@ const Home = () => {
       processStatus: "Approved",
       view: (
         <div className="flex justify-center items-center">
-          <img
+          <Link href={"/view"}><img
             src="/assets/view.png"
             alt="view"
             className="w-5 h-5 cursor-pointer"
-            onClick={() => console.log("View details for account:", "1084227031332")}
-          />
+            onClick={() =>
+              console.log("View details for account:", "1084227031332")
+            }
+          /></Link>
         </div>
       ),
     },
@@ -67,7 +70,9 @@ const Home = () => {
             src="/assets/view.png"
             alt="view"
             className="w-5 h-5 cursor-pointer"
-            onClick={() => console.log("View details for account:", "1084227031333")}
+            onClick={() =>
+              console.log("View details for account:", "1084227031333")
+            }
           />
         </div>
       ),
@@ -78,9 +83,17 @@ const Home = () => {
       verifyProcessStatus: (
         <div className="flex justify-center items-center">
           <img src="/assets/blueTick.png" alt="Tick" className="w-5 h-5 mr-3" />
-          <img src="/assets/grayWarning.png" alt="Warning" className="w-6 h-6 mr-3" />
+          <img
+            src="/assets/grayWarning.png"
+            alt="Warning"
+            className="w-6 h-6 mr-3"
+          />
           <img src="/assets/blueTick.png" alt="Tick" className="w-5 h-5 mr-3" />
-          <img src="/assets/yellowWarning.png" alt="Warning" className="w-6 h-6" />
+          <img
+            src="/assets/yellowWarning.png"
+            alt="Warning"
+            className="w-6 h-6"
+          />
         </div>
       ),
       initiatedDate: "10/10/2024 19:27",
@@ -94,7 +107,9 @@ const Home = () => {
             src="/assets/view.png"
             alt="view"
             className="w-5 h-5 cursor-pointer"
-            onClick={() => console.log("View details for account:", "1084227031334")}
+            onClick={() =>
+              console.log("View details for account:", "1084227031334")
+            }
           />
         </div>
       ),
@@ -160,7 +175,7 @@ const Home = () => {
                 />
               </Space>
             </div>
-            <div className="flex items-center">
+            <div className="flex items-center gap-4">
               <SearchBar onSearch={handleSearch} />
               <button
                 onClick={openModal}
@@ -182,6 +197,9 @@ const Home = () => {
                   />
                 </svg>
               </button>
+              <button className="bg-blue-500 hover:bg-blue-800 text-white rounded-md px-4 py-2 flex items-center">
+                Logs
+              </button>
             </div>
           </div>
 
@@ -193,7 +211,9 @@ const Home = () => {
                   <tr className="bg-gray-300 text-gray-600 uppercase text-sm leading-normal">
                     <th className="py-3 px-6 text-left">Account Number</th>
                     <th className="py-3 px-6 text-left">Name</th>
-                    <th className="py-3 px-6 text-center">Verify Process Status</th>
+                    <th className="py-3 px-6 text-center">
+                      Verify Process Status
+                    </th>
                     <th className="py-3 px-6 text-center">Initiated Date</th>
                     <th className="py-3 px-6 text-center">NID</th>
                     <th className="py-3 px-6 text-center">Remark</th>
@@ -219,7 +239,9 @@ const Home = () => {
                         {account.initiatedDate}
                       </td>
                       <td className="py-3 px-6 text-center">{account.nid}</td>
-                      <td className="py-3 px-6 text-center">{account.remark}</td>
+                      <td className="py-3 px-6 text-center">
+                        {account.remark}
+                      </td>
                       <td className="py-3 px-6 text-center">
                         {account.accountStatus}
                       </td>
@@ -240,10 +262,7 @@ const Home = () => {
               <div className="bg-white p-8 rounded-md w-[500px]">
                 <div className="flex justify-between items-center mb-4">
                   <h2 className="text-2xl font-bold">Select Date Range</h2>
-                  <span
-                    onClick={closeModal}
-                    className="text-xl cursor-pointer"
-                  >
+                  <span onClick={closeModal} className="text-xl cursor-pointer">
                     &times;
                   </span>
                 </div>
@@ -258,7 +277,10 @@ const Home = () => {
                 <div className="flex justify-center">
                   <button
                     onClick={() => {
-                      console.log("Downloading report for range:", selectedRange);
+                      console.log(
+                        "Downloading report for range:",
+                        selectedRange
+                      );
                       closeModal();
                     }}
                     className="bg-blue-500 hover:bg-blue-800 text-white rounded-md px-4 py-2"
