@@ -10,14 +10,16 @@ import Link from "next/link";
 
 const { RangePicker } = DatePicker;
 
+
 const Home = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRange, setSelectedRange] = useState(null);
 
-  const rangePresets = [
-    // Add your date presets here if needed
-  ];
+  const disabledDate = (current) => {
+    // Disable dates after today
+    return current && current > Date.now();
+  };
 
   const accountData = [
     {
@@ -168,7 +170,7 @@ const Home = () => {
             <div className="flex items-center">
               <Space direction="vertical" size={12}>
                 <RangePicker
-                  presets={rangePresets}
+                  disabledDate={disabledDate}
                   onChange={(dates, dateStrings) => {
                     console.log("From: ", dates[0], ", to: ", dates[1]);
                     setSelectedRange(dateStrings);
