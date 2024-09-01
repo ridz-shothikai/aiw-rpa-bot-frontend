@@ -10,20 +10,12 @@ import "antd/dist/reset.css";
 const { RangePicker } = DatePicker;
 
 const Home = () => {
-  const [viewState, setViewState] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRange, setSelectedRange] = useState(null);
 
   const rangePresets = [
     // Add your date presets here if needed
   ];
-
-  const toggleView = (accountNumber) => {
-    setViewState((prevState) => ({
-      ...prevState,
-      [accountNumber]: !prevState[accountNumber],
-    }));
-  };
 
   const accountData = [
     {
@@ -45,10 +37,10 @@ const Home = () => {
       view: (
         <div className="flex justify-center items-center">
           <img
-            src={viewState["1084227031332"] ? "/assets/hide.png" : "/assets/view.png"}
+            src="/assets/view.png"
             alt="view"
             className="w-5 h-5 cursor-pointer"
-            onClick={() => toggleView("1084227031332")}
+            onClick={() => console.log("View details for account:", "1084227031332")}
           />
         </div>
       ),
@@ -72,10 +64,10 @@ const Home = () => {
       view: (
         <div className="flex justify-center items-center">
           <img
-            src={viewState["1084227031333"] ? "/assets/hide.png" : "/assets/view.png"}
+            src="/assets/view.png"
             alt="view"
             className="w-5 h-5 cursor-pointer"
-            onClick={() => toggleView("1084227031333")}
+            onClick={() => console.log("View details for account:", "1084227031333")}
           />
         </div>
       ),
@@ -99,10 +91,10 @@ const Home = () => {
       view: (
         <div className="flex justify-center items-center">
           <img
-            src={viewState["1084227031334"] ? "/assets/hide.png" : "/assets/view.png"}
+            src="/assets/view.png"
             alt="view"
             className="w-5 h-5 cursor-pointer"
-            onClick={() => toggleView("1084227031334")}
+            onClick={() => console.log("View details for account:", "1084227031334")}
           />
         </div>
       ),
@@ -129,7 +121,7 @@ const Home = () => {
               onClick={() => console.log("Approved clicked")}
             >
               <div className="text-blue-600 text-2xl font-bold">22,997</div>
-              <div className="text-gray-700 font-bold ">Approved</div>
+              <div className="text-gray-700 font-bold">Approved</div>
             </button>
 
             <button
@@ -137,21 +129,21 @@ const Home = () => {
               onClick={() => console.log("Processed clicked")}
             >
               <div className="text-green-600 text-2xl font-bold">24,157</div>
-              <div className="text-gray-700 font-bold ">Processed</div>
+              <div className="text-gray-700 font-bold">Processed</div>
             </button>
             <button
               className="bg-white border border-gray-300 flex-1 rounded-lg p-4 shadow-md cursor-pointer transition-shadow duration-150 ease-in-out hover:shadow-lg active:shadow-xl focus:outline-none"
               onClick={() => console.log("Rejected clicked")}
             >
               <div className="text-orange-500 text-2xl font-bold">1,160</div>
-              <div className="text-gray-700 font-bold ">Rejected</div>
+              <div className="text-gray-700 font-bold">Rejected</div>
             </button>
             <button
               className="bg-white border border-gray-300 flex-1 rounded-lg p-4 shadow-md cursor-pointer transition-shadow duration-150 ease-in-out hover:shadow-lg active:shadow-xl focus:outline-none"
               onClick={() => console.log("Failed clicked")}
             >
               <div className="text-red-600 text-2xl font-bold">1,160</div>
-              <div className="text-gray-700 font-bold ">Failed</div>
+              <div className="text-gray-700 font-bold">Failed</div>
             </button>
           </div>
 
@@ -246,7 +238,15 @@ const Home = () => {
           {isModalOpen && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
               <div className="bg-white p-8 rounded-md w-[500px]">
-                <h2 className="text-2xl font-bold mb-4">Select Date Range</h2>
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-2xl font-bold">Select Date Range</h2>
+                  <span
+                    onClick={closeModal}
+                    className="text-xl cursor-pointer"
+                  >
+                    &times;
+                  </span>
+                </div>
                 <RangePicker
                   presets={rangePresets}
                   onChange={(dates, dateStrings) => {
@@ -255,13 +255,7 @@ const Home = () => {
                   }}
                   className="mb-4"
                 />
-                <div className="flex justify-end">
-                  <button
-                    onClick={closeModal}
-                    className="bg-red-500 hover:bg-red-800 text-white rounded-md px-4 py-2 mr-2"
-                  >
-                    Close
-                  </button>
+                <div className="flex justify-center">
                   <button
                     onClick={() => {
                       console.log("Downloading report for range:", selectedRange);

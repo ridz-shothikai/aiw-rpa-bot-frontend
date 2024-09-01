@@ -1,14 +1,29 @@
 "use client";
 import { useState } from "react";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 // Update paths to point to the public folder
 const LoginPage = () => {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("email & password for api call:", email, password);
+    const result = await signIn("credentials", {
+      email,
+      password,
+      redirect: false, // Change this to true if you want to redirect
+    });
+    console.log(result)
+    if (result?.error) {
+      console.error(result.error);
+      // Handle login error here
+    } else {
+      // Redirect or update UI after successful sign-in
+      router.push("/");
+    }
   };
 
   return (
