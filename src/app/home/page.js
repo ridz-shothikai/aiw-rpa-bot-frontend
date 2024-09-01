@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Navbar from "../../components/Navbar"; // Adjust the import path based on your project structure
 import { DatePicker, Space } from "antd";
 import SearchBar from "../../components/SearchBar"; // Adjust the import path
-//import { useRouter } from 'next/router';
+
 import "antd/dist/reset.css";
 import Link from "next/link";
 
@@ -12,11 +12,6 @@ const { RangePicker } = DatePicker;
 
 const Home = () => {
 
-  //const router = useRouter();
-
-    // const handleNavigation = () => {
-    //     router.push('/logs'); // Replace '/logs' with the path to the desired page
-    // };
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRange, setSelectedRange] = useState(null);
 
