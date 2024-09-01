@@ -27,7 +27,7 @@ const ErrorLogs = () => {
         <div>
             <Navbar />
 
-            <div className="container mx-auto p-4 mt-10">
+            <div className="container mx-auto p-4 mt-10 ">
                 <div className="flex justify-between items-center mb-4">
                     <h1 className="text-2xl font-bold">Error Logs</h1>
                     <button
