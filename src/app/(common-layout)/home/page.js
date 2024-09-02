@@ -14,6 +14,7 @@ const { RangePicker } = DatePicker;
 const Home = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRange, setSelectedRange] = useState(null);
+  const [downloadDataRange, setDownloadDataRange] = useState(null);
   const [page, setPage] = useState(1);
   const [accountNo, setAccountNo] = useState("");
 
@@ -28,8 +29,8 @@ const Home = () => {
     2000
   );
   const { data: accountsData, isPending: isAccountsDataPending, refetch: refetchAccountsData } = useCallApi(
-    `api/report/account-list?page=${page}&limit=20${selectedRange?.length ? `&start_date=${new Date(selectedRange[0]).getTime()}&end_date=${new Date(selectedRange[1]).getTime()}` : ""}${accountNo ? `&account_no=${accountNo}` : ""}`,
-    [`account-list?page=${page}&limit=20${selectedRange?.length ? `&start_date=${new Date(selectedRange[0]).getTime()}&end_date=${new Date(selectedRange[1]).getTime()}` : ""}${accountNo ? `&account_no=${accountNo}` : ""}`],
+    `api/report/account-list?page=${page}&limit=20${selectedRange?.length && !!selectedRange[0] ? `&start_date=${new Date(selectedRange[0]).getTime()}&end_date=${new Date(selectedRange[1]).getTime()}` : ""}${accountNo ? `&account_no=${accountNo}` : ""}`,
+    [`account-list?page=${page}&limit=20${selectedRange?.length && !!selectedRange[0] ? `&start_date=${new Date(selectedRange[0]).getTime()}&end_date=${new Date(selectedRange[1]).getTime()}` : ""}${accountNo ? `&account_no=${accountNo}` : ""}`],
     5000
   );
 
@@ -227,6 +228,7 @@ const Home = () => {
           </div>
 
           {/* Download Report Modal */}
+          {/* {isModalOpen && ( */}
           {isModalOpen && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
               <div className="bg-white p-8 rounded-md w-[500px]">
@@ -239,16 +241,16 @@ const Home = () => {
                 <RangePicker
                   presets={rangePresets}
                   onChange={(dates, dateStrings) => {
-                    setSelectedRange(dateStrings);
+                    setDownloadDataRange(dateStrings);
                   }}
-                  className="mb-4"
+                  className="mb-4 w-full"
                 />
                 <div className="flex justify-center">
                   <button
                     onClick={() => {
                       console.log(
                         "Downloading report for range:",
-                        selectedRange
+                        downloadDataRange
                       );
                       closeModal();
                     }}
