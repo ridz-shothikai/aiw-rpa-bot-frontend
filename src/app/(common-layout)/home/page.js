@@ -30,8 +30,8 @@ const Home = () => {
     2000
   );
   const { data: accountsData, isPending: isAccountsDataPending, refetch: refetchAccountsData } = useCallApi(
-    `api/report/account-list?page=${page}&limit=20${selectedRange?.length && !!selectedRange[0] ? `&start_date=${new Date(selectedRange[0]).getTime()}&end_date=${new Date(selectedRange[1]).getTime()}` : ""}${accountNo ? `&account_no=${accountNo}` : ""}`,
-    [`account-list?page=${page}&limit=20${selectedRange?.length && !!selectedRange[0] ? `&start_date=${new Date(selectedRange[0]).getTime()}&end_date=${new Date(selectedRange[1]).getTime()}` : ""}${accountNo ? `&account_no=${accountNo}` : ""}`],
+    `api/report/account-list?page=${page}&limit=20${selectedRange?.length && !!selectedRange[0] ? `&start_date=${selectedRange[0]}&end_date=${selectedRange[1]}` : ""}${accountNo ? `&account_no=${accountNo}` : ""}`,
+    [`account-list?page=${page}&limit=20${selectedRange?.length && !!selectedRange[0] ? `&start_date=${selectedRange[0]}&end_date=${selectedRange[1]}` : ""}${accountNo ? `&account_no=${accountNo}` : ""}`],
     5000
   );
 
