@@ -14,10 +14,10 @@ http.interceptors.request.use(
     // Add X-Access-Token header to every request, you can add other custom headers here
     if (typeof window === "undefined") return config;
 
-    const auth_token = localStorage.getItem("auth_token");
-    if (auth_token) {
+    const accessToken = localStorage.getItem("accessToken");
+    if (accessToken) {
       // bearer token
-      config.headers["Authorization"] = `Bearer ${auth_token}`;
+      config.headers["Authorization"] = `Bearer ${accessToken}`;
     }
 
     return config;
