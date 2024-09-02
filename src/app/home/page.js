@@ -10,9 +10,7 @@ import Link from "next/link";
 
 const { RangePicker } = DatePicker;
 
-
 const Home = () => {
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRange, setSelectedRange] = useState(null);
 
@@ -40,14 +38,16 @@ const Home = () => {
       processStatus: "Approved",
       view: (
         <div className="flex justify-center items-center">
-          <Link href={"/view"}><img
-            src="/assets/view.png"
-            alt="view"
-            className="w-5 h-5 cursor-pointer"
-            onClick={() =>
-              console.log("View details for account:", "1084227031332")
-            }
-          /></Link>
+          <Link href={"/view"}>
+            <img
+              src="/assets/view.png"
+              alt="view"
+              className="w-5 h-5 cursor-pointer"
+              onClick={() =>
+                console.log("View details for account:", "1084227031332")
+              }
+            />
+          </Link>
         </div>
       ),
     },
@@ -201,9 +201,9 @@ const Home = () => {
                 </svg>
               </button>
               <Link href={"/logs"}>
-              <button className="bg-blue-500 hover:bg-blue-800 text-white rounded-md px-4 py-2 flex items-center">
-                Logs
-              </button>
+                <button className="bg-blue-500 hover:bg-blue-800 text-white rounded-md px-4 py-2 flex items-center">
+                  Logs
+                </button>
               </Link>
             </div>
           </div>
