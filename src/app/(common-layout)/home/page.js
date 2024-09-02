@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Navbar from "../../../components/Navbar"; // Adjust the import path based on your project structure
-import { Badge, DatePicker, Popover, Space } from "antd";
+import { Badge, DatePicker, Pagination, Popover, Space } from "antd";
 import SearchBar from "../../../components/SearchBar"; // Adjust the import path
 import { useCallApi } from "../../../lib/api";
 import "antd/dist/reset.css";
@@ -15,117 +15,26 @@ const Home = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRange, setSelectedRange] = useState(null);
   const [page, setPage] = useState(1);
+  const [accountNo, setAccountNo] = useState("");
 
   const { data: statsData, isPending: isStatsPending, refetch: refetchStats } = useCallApi(
     `api/report/total-count`,
-    [`total-count`]
+    [`total-count`],
+    5000
+  );
+  const { data: liveStatus, isPending: isLiveStatusPending, refetch: refetchLiveStatus } = useCallApi(
+    `api/report/live-status`,
+    [`live-status`],
+    2000
   );
   const { data: accountsData, isPending: isAccountsDataPending, refetch: refetchAccountsData } = useCallApi(
-    `api/report/account-list?page=${page}&limit=20`,
-    [`account-list?page=${page}&limit=20`]
+    `api/report/account-list?page=${page}&limit=20${selectedRange?.length ? `&start_date=${new Date(selectedRange[0]).getTime()}&end_date=${new Date(selectedRange[1]).getTime()}` : ""}${accountNo ? `&account_no=${accountNo}` : ""}`,
+    [`account-list?page=${page}&limit=20${selectedRange?.length ? `&start_date=${new Date(selectedRange[0]).getTime()}&end_date=${new Date(selectedRange[1]).getTime()}` : ""}${accountNo ? `&account_no=${accountNo}` : ""}`],
+    5000
   );
-  console.log(statsData)
-  console.log(accountsData)
+
   const rangePresets = [
     // Add your date presets here if needed
-  ];
-
-  const accountData = [
-    {
-      accountNumber: "1084227031332",
-      name: "John Doe",
-      verifyProcessStatus: (
-        <div className="flex justify-center items-center">
-          <img src="/assets/blueTick.png" alt="Tick" className="w-5 h-5 mr-3" />
-          <img src="/assets/blueTick.png" alt="Tick" className="w-5 h-5 mr-3" />
-          <img src="/assets/blueTick.png" alt="Tick" className="w-5 h-5 mr-3" />
-          <img src="/assets/blueTick.png" alt="Tick" className="w-5 h-5" />
-        </div>
-      ),
-      initiatedDate: "10/10/2024 19:25",
-      nid: "Invalid",
-      remark: "Approved",
-      accountStatus: "Processed",
-      processStatus: "Approved",
-      view: (
-        <div className="flex justify-center items-center">
-          <Link href={"/view"}><img
-            src="/assets/view.png"
-            alt="view"
-            className="w-5 h-5 cursor-pointer"
-            onClick={() =>
-              console.log("View details for account:", "1084227031332")
-            }
-          /></Link>
-        </div>
-      ),
-    },
-    {
-      accountNumber: "1084227031333",
-      name: "Jane Smith",
-      verifyProcessStatus: (
-        <div className="flex justify-center items-center">
-          <img src="/assets/blueTick.png" alt="Tick" className="w-5 h-5 mr-3" />
-          <img src="/assets/blueTick.png" alt="Tick" className="w-5 h-5 mr-3" />
-          <img src="/assets/cross.png" alt="Cross" className="w-5 h-5 mr-3" />
-          <img src="/assets/blueTick.png" alt="Tick" className="w-5 h-5" />
-        </div>
-      ),
-      initiatedDate: "10/10/2024 19:26",
-      nid: "Server Down",
-      remark: "Rejected - Date of Birth is missing",
-      accountStatus: "Processed",
-      processStatus: "Rejected",
-      view: (
-        <div className="flex justify-center items-center">
-          <img
-            src="/assets/view.png"
-            alt="view"
-            className="w-5 h-5 cursor-pointer"
-            onClick={() =>
-              console.log("View details for account:", "1084227031333")
-            }
-          />
-        </div>
-      ),
-    },
-    {
-      accountNumber: "1084227031334",
-      name: "Mike Johnson",
-      verifyProcessStatus: (
-        <div className="flex justify-center items-center">
-          <img src="/assets/blueTick.png" alt="Tick" className="w-5 h-5 mr-3" />
-          <img
-            src="/assets/grayWarning.png"
-            alt="Warning"
-            className="w-6 h-6 mr-3"
-          />
-          <img src="/assets/blueTick.png" alt="Tick" className="w-5 h-5 mr-3" />
-          <img
-            src="/assets/yellowWarning.png"
-            alt="Warning"
-            className="w-6 h-6"
-          />
-        </div>
-      ),
-      initiatedDate: "10/10/2024 19:27",
-      nid: "Verified",
-      remark: "Approved",
-      accountStatus: "Processed",
-      processStatus: "Approved",
-      view: (
-        <div className="flex justify-center items-center">
-          <img
-            src="/assets/view.png"
-            alt="view"
-            className="w-5 h-5 cursor-pointer"
-            onClick={() =>
-              console.log("View details for account:", "1084227031334")
-            }
-          />
-        </div>
-      ),
-    },
   ];
 
   const handleSearch = (event) => {
@@ -136,6 +45,13 @@ const Home = () => {
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
+
+  const onChange = (page) => {
+    setPage(page);
+  };
+
+  const approved = statsData?.data?.filter((stat) => stat?._id === "Approved");
+  const rejected = statsData?.data?.filter((stat) => stat?._id === "Rejected");
 
   return (
     <div className="bg-gray-200">
@@ -153,13 +69,32 @@ const Home = () => {
                    ${stat?._id === "Processed" && "text-blue-600"}
                    ${stat?._id === "Rejected" && "text-orange-600"} 
                    text-2xl font-bold`}>
-                  {stat?.count}
+                  {stat?._id === "Processed" ?
+                    <>
+                      {stat?._id && approved[0]?.count + rejected[0]?.count}
+                    </> : stat?.count}
                 </div>
                 <div className="text-gray-700 font-bold">
                   {stat?._id}
                 </div>
               </button>
             ))}
+
+            <div className="bg-white border border-gray-300 flex-1 rounded-lg p-4 shadow-md cursor-pointer transition-shadow duration-150 ease-in-out hover:shadow-lg active:shadow-xl focus:outline-none space-y-1 flex flex-col justify-center">
+              <div className="flex items-center gap-2">
+                <Badge
+                  status={"processing"}
+                  text="Live"
+                  color="red"
+                />
+                <p className={`font-semibold m-0`}>
+                  {liveStatus?.data?.action?.split(" ")?.map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(" ")}
+                </p>
+              </div>
+              <p className="text-gray-700 m-0">
+                {liveStatus?.data?.status}
+              </p>
+            </div>
           </div>
 
           {/* Search and Filter Section */}
@@ -169,14 +104,13 @@ const Home = () => {
                 <RangePicker
                   presets={rangePresets}
                   onChange={(dates, dateStrings) => {
-                    console.log("From: ", dates[0], ", to: ", dates[1]);
                     setSelectedRange(dateStrings);
                   }}
                 />
               </Space>
             </div>
             <div className="flex items-center gap-4">
-              <SearchBar onSearch={handleSearch} />
+              <SearchBar onSearch={handleSearch} accountNo={accountNo} setAccountNo={setAccountNo} />
               <button
                 onClick={openModal}
                 className="bg-blue-500 hover:bg-blue-800 text-white rounded-md px-4 py-2 flex items-center ms-4"
@@ -230,12 +164,28 @@ const Home = () => {
                       </td>
                       <td className="py-3 px-6 text-left">{account.name}</td>
                       <td className="py-3 px-6 text-center">
-                        <div className="flex justify-center items-center">
-                          <img src="/assets/blueTick.png" alt="Tick" className="w-5 h-5 mr-3" />
-                          <img src="/assets/blueTick.png" alt="Tick" className="w-5 h-5 mr-3" />
-                          <img src="/assets/cross.png" alt="Cross" className="w-5 h-5 mr-3" />
-                          <img src="/assets/blueTick.png" alt="Tick" className="w-5 h-5" />
-                        </div>
+                        <Popover
+                          content={() => (
+                            <div className="max-w-96 space-y-2">
+                              {account?.process_status?.map(item => (
+                                <div className="flex items-center gap-2">
+                                  {item?.status ? <img src="/assets/blueTick.png" alt="Tick" className="w-5 h-5 mr-3" /> : <img src="/assets/cross.png" alt="Cross" className="w-5 h-5 mr-3" />}
+                                  {item?.name === "initiated" && <span>Initiated at {moment(account.initiatedDate).format('MM/DD/YYYY hh:mm A')}</span>}
+                                  {item?.name === "scrapped" && <span>Scrapped at {moment(account.initiatedDate).format('MM/DD/YYYY hh:mm A')}</span>}
+                                  {item?.name === "nid_verify" && <span>NID verified at {moment(account.initiatedDate).format('MM/DD/YYYY hh:mm A')}</span>}
+                                  {item?.name === "submit" && <span>Submitted at {moment(account.initiatedDate).format('MM/DD/YYYY hh:mm A')}</span>}
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                          placement="right"
+                        >
+                          <div className="flex justify-center items-center">
+                            {account?.process_status?.map(item => (
+                              item?.status ? <img src="/assets/blueTick.png" alt="Tick" className="w-5 h-5 mr-3" /> : <img src="/assets/cross.png" alt="Cross" className="w-5 h-5 mr-3" />
+                            ))}
+                          </div>
+                        </Popover>
                       </td>
                       <td className="py-3 px-6 text-center">
                         {moment(account.initiatedDate).format('DD/MM/YYYY, HH:mm:ss')}
@@ -271,6 +221,9 @@ const Home = () => {
                 </tbody>
               </table>
             </div>
+            <div className='flex justify-end pt-4'>
+              <Pagination current={page} onChange={onChange} pageSize={20} total={accountsData?.pagination?.totalItems} showSizeChanger={false} />
+            </div>
           </div>
 
           {/* Download Report Modal */}
@@ -286,7 +239,6 @@ const Home = () => {
                 <RangePicker
                   presets={rangePresets}
                   onChange={(dates, dateStrings) => {
-                    console.log("Selected range:", dateStrings);
                     setSelectedRange(dateStrings);
                   }}
                   className="mb-4"

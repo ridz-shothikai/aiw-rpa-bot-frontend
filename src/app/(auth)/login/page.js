@@ -9,6 +9,10 @@ const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  if (localStorage.getItem("accessToken")) {
+    router.push("/");
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const result = await signIn("credentials", {
@@ -16,7 +20,7 @@ const LoginPage = () => {
       password,
       redirect: false, // Change this to true if you want to redirect
     });
-    console.log(result)
+
     if (result?.error) {
       console.error(result.error);
       // Handle login error here

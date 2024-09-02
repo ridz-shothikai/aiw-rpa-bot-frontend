@@ -4,9 +4,19 @@ import React, { useState } from "react";
 import { FaSignOutAlt } from "react-icons/fa";
 import Image from "next/image"; // Use this for optimized images
 import Link from 'next/link'; // Import Link for client-side navigation
+import { Popover } from "antd";
+import { useRouter } from "next/navigation";
+import { signOut } from "next-auth/react";
 
 export default function Navbar() {
     const [dropdownOpen, setDropdownOpen] = useState(false);
+    const router = useRouter();
+
+    const handleLogout = async () => {
+        await signOut({ redirect: false, callbackUrl: '/login' });
+        localStorage.removeItem("accessToken");
+        router.push("/login");
+    };
 
     return (
         <nav className="bg-white fixed top-0 flex h-18 w-full justify-between px-8 shadow">
@@ -21,30 +31,23 @@ export default function Navbar() {
                 </div>
             </div>
 
-            <div className="relative flex items-center">
-                <div className="flex items-center">
-                    <Image
-                        src="/path/to/profile-image.jpg" // Ensure this path is correct
-                        alt="Profile"
-                        width={40}
-                        height={40}
-                    />
-                </div>
-
-                <button
-                    className="font-bold px-4 py-2 ml-4 rounded focus:outline-none"
-                    onClick={() => setDropdownOpen(!dropdownOpen)}
+            <div className="relative flex items-center"> 
+                <Popover
+                    content={() => {
+                        return (
+                            <p onClick={handleLogout} className="m-0 px-4 py-2 text-gray-800 hover:bg-gray-100 rounded-md cursor-pointer">
+                                <FaSignOutAlt className="inline mr-2" /> Log Out
+                            </p>
+                        )
+                    }}
+                    trigger="click"
                 >
-                    DoTech Ltd.
-                </button>
-
-                {dropdownOpen && (
-                    <div className="absolute top-16 right-0 mt-2 py-2 bg-white border rounded shadow-lg z-50">
-                        <Link href="/logout" className="block px-4 py-2 text-gray-800 hover:bg-gray-200">
-                            <FaSignOutAlt className="inline mr-2" /> Log Out
-                        </Link>
+                    <div className="flex items-center cursor-pointer"> 
+                        <button className="font-medium px-4 py-2 rounded focus:outline-none">
+                            DoTech Ltd.
+                        </button>
                     </div>
-                )}
+                </Popover>
             </div>
         </nav>
     );

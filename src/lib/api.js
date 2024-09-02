@@ -3,13 +3,13 @@
 import { useQuery } from "@tanstack/react-query";
 import { http } from "./http";
 
-export function useCallApi(url, key) {
+export function useCallApi(url, key, interval) {
   return useQuery({
     queryKey: [key],
     queryFn: async () => {
       const response = await http.get(url);
-      console.log(response)
       return response.data;
     },
+    refetchInterval: interval || false,
   });
 }
