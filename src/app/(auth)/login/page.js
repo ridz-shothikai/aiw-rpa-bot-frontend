@@ -9,8 +9,10 @@ const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  if (localStorage.getItem("accessToken")) {
-    router.push("/");
+  if (typeof window !== undefined) {
+    if (localStorage.getItem("accessToken")) {
+      router.push("/");
+    }
   }
 
   const handleSubmit = async (e) => {
