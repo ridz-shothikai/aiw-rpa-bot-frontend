@@ -8,22 +8,39 @@ import { AiOutlineEye } from "react-icons/ai"; // Import an eye icon for viewing
 import { useCallApi } from '../../../lib/api';
 import moment from 'moment';
 import { Pagination, Popover } from 'antd';
+import { IoMdCheckmark } from "react-icons/io";
+import { GoDotFill } from "react-icons/go";
+import { IoMdClose } from "react-icons/io";
 
 // Modal.setAppElement('#__next'); // Ensure this element exists
 
 const ErrorLogs = () => {
     const [page, setPage] = useState(1);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedImage, setSelectedImage] = useState(null); // State to hold the selected image
+    const [selectedImage, setSelectedImage] = useState(null);
+    const [hasFetched, setHasFetched] = useState(false);
+
     const { data: logsData, isPending: isLogsPending, refetch: refetchLogs } = useCallApi(
         `api/report/error-logs?page=${page}&limit=20`,
         [`error-logs?page=${page}&limit=20`]
     );
-
+    const { data: bankStatus, isPending: isBankStatusPending, refetch: refetchBankStatus } = useCallApi(
+        `api/report/bank-asia-server-status`,
+        [`/report/bank-asia-server-status`]
+    );
+    const { data: nidStatus, isPending: isNidStatusPending, refetch: refetchNidStatus } = useCallApi(
+        `api/report/nid-server-status`,
+        [`/report/nid-server-status`]
+    );
+    const { data: botStatus, isPending: isBotStatusPending, refetch: refetchBotStatus } = useCallApi(
+        `api/report/bot-server-status`,
+        [`/report/bot-server-status`]
+    );
+    console.log(isModalOpen, hasFetched, isModalOpen && hasFetched)
     const diagnosisResults = [
-        { name: 'Birth Portal', status: 'Failed' },
-        { name: 'Bank Asia Portal', status: 'Failed' },
-        { name: 'NID Portal', status: 'Failed' }
+        { name: 'Bank Asia Portal', status: bankStatus?.status, isLoading: isBankStatusPending },
+        { name: 'NID Portal', status: nidStatus?.status, isLoading: isNidStatusPending },
+        { name: 'Bot Server', status: botStatus?.status, isLoading: isBotStatusPending },
     ];
 
     const openImageModal = (image) => {
@@ -49,7 +66,10 @@ const ErrorLogs = () => {
 
                     <h1 className="text-2xl font-bold">Error Logs</h1>
                     <button
-                        onClick={() => setIsModalOpen(true)}
+                        onClick={() => {
+                            setIsModalOpen(true);
+                            setHasFetched(true);
+                        }}
                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                     >
                         Diagnose
@@ -115,22 +135,32 @@ const ErrorLogs = () => {
                 ) : (
                     <div className="mb-4">
                         {diagnosisResults.map((result, index) => (
-                            <div key={index} className="flex items-center mb-4">
-                                <div className="flex-shrink-0 h-8 w-8 rounded-full bg-red-100 flex items-center justify-center">
-                                    <svg className="h-6 w-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
-                                    </svg>
+                            <div key={index} className="flex items-center gap-4 mb-4">
+                                <div className={`flex-shrink-0 h-12 w-12 rounded-full ${result.isLoading ? "bg-yellow-100" : result.status ? "bg-green-100" : "bg-red-100"} flex items-center justify-center`}>
+                                    {result.isLoading ? (
+                                        <GoDotFill size={30} className="text-gray-500" />
+                                    ) : (
+                                        result.status ? (
+                                            <IoMdCheckmark size={30} className="text-green-500" />
+                                        ) : (
+                                            <IoMdClose size={30} className="text-red-500" />
+                                        )
+                                    )}
                                 </div>
-                                <div className="ml-4">
-                                    <p className="text-gray-700 font-semibold">{result.name}</p>
-                                    <p className="text-red-500">{result.status}</p>
+                                <div className="space-y-1">
+                                    <p className="text-gray-700 font-semibold m-0">{result.name}</p>
+                                    <p className={`${result.isLoading ? "text-gray-700" : result.status ? "text-green-500" : "text-red-500"} m-0`}>
+                                        {result.isLoading ? 'Loading...' : result.status ? "Connected" : "Failed"}
+                                    </p>
                                 </div>
                             </div>
                         ))}
                     </div>
                 )}
 
-                {!selectedImage && <div className="text-center text-gray-600">Diagnosis Completed!</div>}
+                {!selectedImage && <div className="text-center text-gray-600">
+                    {(isBankStatusPending || isNidStatusPending || isBotStatusPending) ? "Diagnosis ongoing..." : "Diagnosis Completed!"}
+                </div>}
             </Modal>
         </div>
     );
