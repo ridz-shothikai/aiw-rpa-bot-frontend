@@ -1,15 +1,16 @@
 'use client';
 
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 const CommonLayout = ({ children }) => {
     const router = useRouter();
 
-    if (typeof window !== undefined) {
+    useEffect(() => {
         if (!localStorage.getItem("accessToken")) {
             router.push("/login");
         }
-    }
+    }, [])
 
     return (
         <>
