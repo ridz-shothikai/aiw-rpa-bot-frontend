@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Navbar from "../../../components/Navbar";
 import Modal from 'react-modal';
 import Link from 'next/link'; // Import Link for navigation
@@ -26,15 +26,18 @@ const ErrorLogs = () => {
     );
     const { data: bankStatus, isPending: isBankStatusPending, refetch: refetchBankStatus } = useCallApi(
         `api/report/bank-asia-server-status`,
-        [`/report/bank-asia-server-status`]
+        [`/report/bank-asia-server-status`],
+        isModalOpen && !hasFetched
     );
     const { data: nidStatus, isPending: isNidStatusPending, refetch: refetchNidStatus } = useCallApi(
         `api/report/nid-server-status`,
-        [`/report/nid-server-status`]
+        [`/report/nid-server-status`],
+        isModalOpen && !hasFetched
     );
     const { data: botStatus, isPending: isBotStatusPending, refetch: refetchBotStatus } = useCallApi(
         `api/report/bot-server-status`,
-        [`/report/bot-server-status`]
+        [`/report/bot-server-status`],
+        isModalOpen && !hasFetched
     );
     console.log(isModalOpen, hasFetched, isModalOpen && hasFetched)
     const diagnosisResults = [
@@ -42,6 +45,13 @@ const ErrorLogs = () => {
         { name: 'NID Portal', status: nidStatus?.status, isLoading: isNidStatusPending },
         { name: 'Bot Server', status: botStatus?.status, isLoading: isBotStatusPending },
     ];
+
+    useEffect(() => {
+        if (isModalOpen && !hasFetched) {
+          // Mark APIs as fetched when modal opens for the first time
+          setHasFetched(true);
+        }
+      }, [isModalOpen, hasFetched]);
 
     const openImageModal = (image) => {
         setSelectedImage(image);
@@ -66,10 +76,7 @@ const ErrorLogs = () => {
 
                     <h1 className="text-2xl font-bold">Error Logs</h1>
                     <button
-                        onClick={() => {
-                            setIsModalOpen(true);
-                            setHasFetched(true);
-                        }}
+                        onClick={() => setIsModalOpen(true)}
                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                     >
                         Diagnose
