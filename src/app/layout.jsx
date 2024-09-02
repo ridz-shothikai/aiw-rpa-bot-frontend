@@ -4,6 +4,10 @@ import Providers from "../components/providers/Providers";
 export const metadata = {
   title: "AIW RPA BOT",
   description: "The AIW RPA BOT App",
+  icons: {
+    icon: ['/favicon.ico?v=4'],
+    shortcut: ['/favicon.ico?v=4']
+  },
 };
 
 export default function RootLayout({ children }) {
