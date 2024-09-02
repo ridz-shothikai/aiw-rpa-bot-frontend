@@ -17,6 +17,7 @@ const Home = () => {
   const [downloadDataRange, setDownloadDataRange] = useState(null);
   const [page, setPage] = useState(1);
   const [accountNo, setAccountNo] = useState("");
+  const [input, setInput] = useState("");
 
   const { data: statsData, isPending: isStatsPending, refetch: refetchStats } = useCallApi(
     `api/report/total-count`,
@@ -53,6 +54,14 @@ const Home = () => {
 
   const approved = statsData?.data?.filter((stat) => stat?._id === "Approved");
   const rejected = statsData?.data?.filter((stat) => stat?._id === "Rejected");
+
+  const handleDownload = () => {
+    if (downloadDataRange?.length && !!downloadDataRange[0]) {
+      window.open(`${process.env.NEXT_PUBLIC_API_URI}api/report/download-csv?start_date=${downloadDataRange[0]}&end_date=${downloadDataRange[1]}`, "_blank");
+
+      closeModal();
+    }
+  }
 
   return (
     <div className="bg-gray-200">
@@ -111,7 +120,7 @@ const Home = () => {
               </Space>
             </div>
             <div className="flex items-center gap-4">
-              <SearchBar onSearch={handleSearch} accountNo={accountNo} setAccountNo={setAccountNo} />
+              <SearchBar onSearch={handleSearch} accountNo={accountNo} setAccountNo={setAccountNo} input={input} setInput={setInput} />
               <button
                 onClick={openModal}
                 className="bg-blue-500 hover:bg-blue-800 text-white rounded-md px-4 py-2 flex items-center ms-4"
@@ -163,7 +172,9 @@ const Home = () => {
                       <td className="py-3 px-6 text-left whitespace-nowrap">
                         {account.accountNumber}
                       </td>
-                      <td className="py-3 px-6 text-left">{account.name}</td>
+                      <td className="py-3 px-6 text-left">
+                        {account.name.split(' ').map(part => part ? part[0] + '*'.repeat(part.length - 1) : '').join(' ')}
+                      </td>
                       <td className="py-3 px-6 text-center">
                         <Popover
                           content={() => (
@@ -247,13 +258,7 @@ const Home = () => {
                 />
                 <div className="flex justify-center">
                   <button
-                    onClick={() => {
-                      console.log(
-                        "Downloading report for range:",
-                        downloadDataRange
-                      );
-                      closeModal();
-                    }}
+                    onClick={handleDownload}
                     className="bg-blue-500 hover:bg-blue-800 text-white rounded-md px-4 py-2"
                   >
                     Download
