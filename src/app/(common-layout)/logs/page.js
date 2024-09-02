@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Navbar from "../../../components/Navbar";
 import Modal from 'react-modal';
 import Link from 'next/link'; // Import Link for navigation
@@ -18,7 +18,6 @@ const ErrorLogs = () => {
     const [page, setPage] = useState(1);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
-    const [hasFetched, setHasFetched] = useState(false);
 
     const { data: logsData, isPending: isLogsPending, refetch: refetchLogs } = useCallApi(
         `api/report/error-logs?page=${page}&limit=20`,
@@ -26,32 +25,22 @@ const ErrorLogs = () => {
     );
     const { data: bankStatus, isPending: isBankStatusPending, refetch: refetchBankStatus } = useCallApi(
         `api/report/bank-asia-server-status`,
-        [`/report/bank-asia-server-status`],
-        isModalOpen && !hasFetched
+        [`/report/bank-asia-server-status`]
     );
     const { data: nidStatus, isPending: isNidStatusPending, refetch: refetchNidStatus } = useCallApi(
         `api/report/nid-server-status`,
-        [`/report/nid-server-status`],
-        isModalOpen && !hasFetched
+        [`/report/nid-server-status`]
     );
     const { data: botStatus, isPending: isBotStatusPending, refetch: refetchBotStatus } = useCallApi(
         `api/report/bot-server-status`,
-        [`/report/bot-server-status`],
-        isModalOpen && !hasFetched
+        [`/report/bot-server-status`]
     );
-    console.log(isModalOpen, hasFetched, isModalOpen && hasFetched)
+
     const diagnosisResults = [
         { name: 'Bank Asia Portal', status: bankStatus?.status, isLoading: isBankStatusPending },
         { name: 'NID Portal', status: nidStatus?.status, isLoading: isNidStatusPending },
         { name: 'Bot Server', status: botStatus?.status, isLoading: isBotStatusPending },
     ];
-
-    useEffect(() => {
-        if (isModalOpen && !hasFetched) {
-          // Mark APIs as fetched when modal opens for the first time
-          setHasFetched(true);
-        }
-      }, [isModalOpen, hasFetched]);
 
     const openImageModal = (image) => {
         setSelectedImage(image);
