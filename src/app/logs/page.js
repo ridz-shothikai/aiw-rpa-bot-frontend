@@ -113,24 +113,24 @@ const ErrorLogs = () => {
 
                 {/* Pagination Controls */}
                 <div className="flex justify-end mt-4 items-center">
-    <button
-        onClick={handlePrevPage}
-        className="bg-gray-300 hover:bg-gray-400 text-gray-700 font-bold py-2 px-4 rounded-l disabled:opacity-50"
-        disabled={currentPage === 1}
-    >
-        Prev
-    </button>
-    <span className="px-4 py-2 text-gray-700 font-semibold">
-        {currentPage} of {Math.ceil(logs.length / logsPerPage)}
-    </span>
-    <button
-        onClick={handleNextPage}
-        className="bg-gray-300 hover:bg-gray-400 text-gray-700 font-bold py-2 px-4 rounded-r ml-1 disabled:opacity-50"
-        disabled={currentPage * logsPerPage >= logs.length}
-    >
-        Next
-    </button>
-</div>
+                    <button
+                        onClick={handlePrevPage}
+                        className="bg-gray-300 hover:bg-gray-400 text-gray-700 font-bold py-2 px-4 rounded-l disabled:opacity-50"
+                        disabled={currentPage === 1}
+                    >
+                        Prev
+                    </button>
+                    <span className="px-4 py-2 text-gray-700 font-semibold">
+                        {currentPage} of {Math.ceil(logs.length / logsPerPage)}
+                    </span>
+                    <button
+                        onClick={handleNextPage}
+                        className="bg-gray-300 hover:bg-gray-400 text-gray-700 font-bold py-2 px-4 rounded-r ml-1 disabled:opacity-50"
+                        disabled={currentPage * logsPerPage >= logs.length}
+                    >
+                        Next
+                    </button>
+                </div>
 
 
             </div>
