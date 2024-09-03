@@ -71,54 +71,62 @@ const ErrorLogs = () => {
                         Diagnose
                     </button>
                 </div>
-
+                {console.log(isLogsPending, logsData)}
                 {isLogsPending ? (
                     <div className='h-[80vh] flex justify-center items-center'>
                         <Spin size="large" />
                     </div>
                 ) : (
-                    <>
-                        <div className="overflow-x-auto">
-                            <table className="min-w-full bg-white border">
-                                <thead className="bg-gray-300">
-                                    <tr>
-                                        <th className="py-2 px-4 border-b text-center">Date</th>
-                                        <th className="py-2 px-4 border-b text-center">Error Log</th>
-                                        <th className="py-2 px-4 border-b text-center">Error Screen</th> {/* New column */}
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {logsData?.data?.map((log, index) => (
-                                        <tr key={index}>
-                                            <td className="py-2 px-4 border-b text-center">
-                                                {moment(log.updatedAt).format('DD/MM/YYYY, HH:mm:ss')}</td>
-                                            <td className="py-2 px-4 border-b text-center max-w-96 truncate">
-                                                <Popover
-                                                    content={() => (
-                                                        <div className="max-w-96">
-                                                            {log.error_message}
-                                                        </div>
-                                                    )}
-                                                    placement="top"
-                                                    arrow={false}
-                                                >
-                                                    {log.error_message}
-                                                </Popover>
-                                            </td>
-                                            <td className="py-2 px-4 border-b text-center">
-                                                <button onClick={() => window.open(log?.error_image)}>
-                                                    <AiOutlineEye size={20} className="text-blue-500 hover:text-blue-700" />
-                                                </button>
-                                            </td> {/* Icon for viewing the error screen */}
+                    logsData?.data?.length ? (
+                        <>
+                            <div className="overflow-x-auto">
+                                <table className="min-w-full bg-white border">
+                                    <thead className="bg-gray-300">
+                                        <tr>
+                                            <th className="py-2 px-4 border-b text-center">Date</th>
+                                            <th className="py-2 px-4 border-b text-center">Error Log</th>
+                                            <th className="py-2 px-4 border-b text-center">Error Screen</th> {/* New column */}
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        {logsData?.data?.map((log, index) => (
+                                            <tr key={index}>
+                                                <td className="py-2 px-4 border-b text-center">
+                                                    {moment(log.updatedAt).format('DD/MM/YYYY, HH:mm:ss')}</td>
+                                                <td className="py-2 px-4 border-b text-center max-w-96 truncate">
+                                                    <Popover
+                                                        content={() => (
+                                                            <div className="max-w-96">
+                                                                {log.error_message}
+                                                            </div>
+                                                        )}
+                                                        placement="top"
+                                                        arrow={false}
+                                                    >
+                                                        {log.error_message}
+                                                    </Popover>
+                                                </td>
+                                                <td className="py-2 px-4 border-b text-center">
+                                                    <button onClick={() => window.open(log?.error_image)}>
+                                                        <AiOutlineEye size={20} className="text-blue-500 hover:text-blue-700" />
+                                                    </button>
+                                                </td> {/* Icon for viewing the error screen */}
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div className='flex justify-end pt-4'>
+                                <Pagination current={page} onChange={onChange} pageSize={20} total={logsData?.pagination?.totalItems} showSizeChanger={false} />
+                            </div>
+                        </>
+                    ) : (
+                        <div className="h-96 flex justify-center items-center">
+                            <p className='text-center text-2xl font-semibold'>
+                                No error logs found!
+                            </p>
                         </div>
-                        <div className='flex justify-end pt-4'>
-                            <Pagination current={page} onChange={onChange} pageSize={20} total={logsData?.pagination?.totalItems} showSizeChanger={false} />
-                        </div>
-                    </>
+                    )
                 )}
             </div>
 
