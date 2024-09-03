@@ -1,21 +1,12 @@
 'use client';
 
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import ProtectedRoute from "../../components/ProtectedRoute";
 
 const CommonLayout = ({ children }) => {
-    const router = useRouter();
-
-    useEffect(() => {
-        if (!localStorage.getItem("accessToken")) {
-            router.push("/login");
-        }
-    }, [])
-
     return (
-        <>
+        <ProtectedRoute>
             {children}
-        </>
+        </ProtectedRoute>
     )
 }
 

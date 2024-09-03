@@ -2,34 +2,41 @@
 import { useEffect, useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import useAuth from "../../../hooks/useAuth";
+import { Alert, Spin } from "antd";
 
-// Update paths to point to the public folder
 const LoginPage = () => {
   const router = useRouter();
+  const { login, user, loading } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    if (localStorage.getItem("accessToken")) {
-      router.push("/");
+    if (!loading && user?.name) {
+      router.push('/');
     }
-  }, [])
+  }, [loading, user, router]);
+
+  if (loading || user?.name) {
+    return (
+      <div className='h-screen flex justify-center items-center'>
+        <Spin size="large" />
+      </div>
+    );
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const result = await signIn("credentials", {
-      email,
-      password,
-      redirect: false, // Change this to true if you want to redirect
-    });
+    setError("");
+    setIsLoading(true);
+    const res = await login(email, password);
 
-    if (result?.error) {
-      console.error(result.error);
-      // Handle login error here
-    } else {
-      // Redirect or update UI after successful sign-in
-      router.push("/");
+    if (res?.response?.data?.error || res?.message) {
+      setError(res?.response?.data?.error || res?.message);
     }
+    setIsLoading(false);
   };
 
   return (
@@ -75,9 +82,11 @@ const LoginPage = () => {
               </div>
             </div>
 
+            {error && <Alert message={error} type="error" showIcon className="mt-4" />}
+
             <div className="mt-5">
-              <button className="bg-[#02839f] rounded-md py-2 w-full font-bold text-white cursor-pointer">
-                Log In
+              <button className="bg-[#02839f] rounded-md py-2 w-full font-bold text-white cursor-pointer" disabled={isLoading}>
+                {isLoading ? <Spin size="default" /> : "Log In"}
               </button>
             </div>
             <div className="flex-col xl:flex-row flex xl:space-x-3 xl:space-y-0 mt-5 space-y-3">

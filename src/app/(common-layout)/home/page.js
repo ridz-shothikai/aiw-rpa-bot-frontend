@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Navbar from "../../../components/Navbar"; // Adjust the import path based on your project structure
-import { Badge, DatePicker, Pagination, Popover, Space } from "antd";
+import { Badge, DatePicker, Pagination, Popover, Space, Spin } from "antd";
 import SearchBar from "../../../components/SearchBar"; // Adjust the import path
 import { useCallApi } from "../../../lib/api";
 import "antd/dist/reset.css";
@@ -150,93 +150,99 @@ const Home = () => {
           </div>
 
           {/* Data Table Section */}
-          <div className="pt-3 pb-4 rounded-sm flex-1">
-            <div className="overflow-x-auto mt-4 flex justify-center flex-col items-center relative">
-              <table className="table-auto w-full bg-white shadow-md rounded-md">
-                <thead>
-                  <tr className="bg-gray-300 text-gray-600 uppercase text-sm leading-normal">
-                    <th className="py-3 px-6 text-left">Account Number</th>
-                    <th className="py-3 px-6 text-left">Name</th>
-                    <th className="py-3 px-6 text-center">Verify Process Status</th>
-                    <th className="py-3 px-6 text-center">Initiated Date</th>
-                    <th className="py-3 px-6 text-center">Remark</th>
-                    <th className="py-3 px-6 text-center">Process Status</th>
-                  </tr>
-                </thead>
-                <tbody className="text-gray-600 text-sm font-light">
-                  {accountsData?.data?.map((account) => (
-                    <tr
-                      key={account.accountNumber}
-                      className="border-b border-gray-200 hover:bg-gray-100"
-                    >
-                      <td className="py-3 px-6 text-left whitespace-nowrap">
-                        {account.accountNumber}
-                      </td>
-                      <td className="py-3 px-6 text-left">
-                        {account.name.split(' ').map(part => part ? part[0] + '*'.repeat(part.length - 1) : '').join(' ')}
-                      </td>
-                      <td className="py-3 px-6 text-center">
-                        <Popover
-                          content={() => (
-                            <div className="max-w-96 space-y-2">
+          {isAccountsDataPending ? (
+            <div className='h-96 flex justify-center items-center'>
+              <Spin size="large" />
+            </div>
+          ) : (
+            <div className="pt-3 pb-4 rounded-sm flex-1">
+              <div className="overflow-x-auto mt-4 flex justify-center flex-col items-center relative">
+                <table className="table-auto w-full bg-white shadow-md rounded-md">
+                  <thead>
+                    <tr className="bg-gray-300 text-gray-600 uppercase text-sm leading-normal">
+                      <th className="py-3 px-6 text-left">Account Number</th>
+                      <th className="py-3 px-6 text-left">Name</th>
+                      <th className="py-3 px-6 text-center">Verify Process Status</th>
+                      <th className="py-3 px-6 text-center">Initiated Date</th>
+                      <th className="py-3 px-6 text-center">Remark</th>
+                      <th className="py-3 px-6 text-center">Process Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="text-gray-600 text-sm font-light">
+                    {accountsData?.data?.map((account) => (
+                      <tr
+                        key={account.accountNumber}
+                        className="border-b border-gray-200 hover:bg-gray-100"
+                      >
+                        <td className="py-3 px-6 text-left whitespace-nowrap">
+                          {account.accountNumber}
+                        </td>
+                        <td className="py-3 px-6 text-left">
+                          {account.name.split(' ').map(part => part ? part[0] + '*'.repeat(part.length - 1) : '').join(' ')}
+                        </td>
+                        <td className="py-3 px-6 text-center">
+                          <Popover
+                            content={() => (
+                              <div className="max-w-96 space-y-2">
+                                {account?.process_status?.map(item => (
+                                  <div className="flex items-center gap-2">
+                                    {item?.status ? <img src="/assets/blueTick.png" alt="Tick" className="w-5 h-5 mr-3" /> : <img src="/assets/cross.png" alt="Cross" className="w-5 h-5 mr-3" />}
+                                    {item?.name === "initiated" && <span>Initiated at {moment(account.initiatedDate).format('MM/DD/YYYY hh:mm A')}</span>}
+                                    {item?.name === "scrapped" && <span>Scrapped at {moment(account.initiatedDate).format('MM/DD/YYYY hh:mm A')}</span>}
+                                    {item?.name === "nid_verify" && <span>NID verified at {moment(account.initiatedDate).format('MM/DD/YYYY hh:mm A')}</span>}
+                                    {item?.name === "submit" && <span>Submitted at {moment(account.initiatedDate).format('MM/DD/YYYY hh:mm A')}</span>}
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                            placement="right"
+                          >
+                            <div className="flex justify-center items-center">
                               {account?.process_status?.map(item => (
-                                <div className="flex items-center gap-2">
-                                  {item?.status ? <img src="/assets/blueTick.png" alt="Tick" className="w-5 h-5 mr-3" /> : <img src="/assets/cross.png" alt="Cross" className="w-5 h-5 mr-3" />}
-                                  {item?.name === "initiated" && <span>Initiated at {moment(account.initiatedDate).format('MM/DD/YYYY hh:mm A')}</span>}
-                                  {item?.name === "scrapped" && <span>Scrapped at {moment(account.initiatedDate).format('MM/DD/YYYY hh:mm A')}</span>}
-                                  {item?.name === "nid_verify" && <span>NID verified at {moment(account.initiatedDate).format('MM/DD/YYYY hh:mm A')}</span>}
-                                  {item?.name === "submit" && <span>Submitted at {moment(account.initiatedDate).format('MM/DD/YYYY hh:mm A')}</span>}
-                                </div>
+                                item?.status ? <img src="/assets/blueTick.png" alt="Tick" className="w-5 h-5 mr-3" /> : <img src="/assets/cross.png" alt="Cross" className="w-5 h-5 mr-3" />
                               ))}
                             </div>
-                          )}
-                          placement="right"
-                        >
-                          <div className="flex justify-center items-center">
-                            {account?.process_status?.map(item => (
-                              item?.status ? <img src="/assets/blueTick.png" alt="Tick" className="w-5 h-5 mr-3" /> : <img src="/assets/cross.png" alt="Cross" className="w-5 h-5 mr-3" />
-                            ))}
-                          </div>
-                        </Popover>
-                      </td>
-                      <td className="py-3 px-6 text-center">
-                        {moment(account.initiatedDate).format('DD/MM/YYYY, HH:mm:ss')}
-                      </td>
-                      <td className="py-3 px-6 text-center max-w-48 truncate">
-                        <Popover
-                          content={() => (
-                            <div className="max-w-96">
-                              {account.remark}
-                            </div>
-                          )}
-                          placement="topLeft"
-                          arrow={false}
-                        >
-                          {account.remark}
-                        </Popover>
-                      </td>
-                      <td className="py-3 px-6 text-center">
-                        <div className={`
+                          </Popover>
+                        </td>
+                        <td className="py-3 px-6 text-center">
+                          {moment(account.initiatedDate).format('DD/MM/YYYY, HH:mm:ss')}
+                        </td>
+                        <td className="py-3 px-6 text-center max-w-48 truncate">
+                          <Popover
+                            content={() => (
+                              <div className="max-w-96">
+                                {account.remark}
+                              </div>
+                            )}
+                            placement="topLeft"
+                            arrow={false}
+                          >
+                            {account.remark}
+                          </Popover>
+                        </td>
+                        <td className="py-3 px-6 text-center">
+                          <div className={`
                           px-4 py-[2px] rounded-3xl w-max
                           ${account.processState === "Approved" && "bg-green-200 border-green-500"}
                           ${account.processState === "Processed" && "bg-yellow-200 border-yellow-500"}
                           ${account.processState === "Rejected" && "bg-red-200 border-red-500"}
                         `}>
-                          <Badge
-                            status={account.processState === "Approved" ? "success" : account.processState === "Processed" ? "warning" : account.processState === "Rejected" ? "error" : "default"}
-                            text={account.processState}
-                          />
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                            <Badge
+                              status={account.processState === "Approved" ? "success" : account.processState === "Processed" ? "warning" : account.processState === "Rejected" ? "error" : "default"}
+                              text={account.processState}
+                            />
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <div className='flex justify-end pt-4'>
+                <Pagination current={page} onChange={onChange} pageSize={20} total={accountsData?.pagination?.totalItems} showSizeChanger={false} />
+              </div>
             </div>
-            <div className='flex justify-end pt-4'>
-              <Pagination current={page} onChange={onChange} pageSize={20} total={accountsData?.pagination?.totalItems} showSizeChanger={false} />
-            </div>
-          </div>
+          )}
 
           {/* Download Report Modal */}
           {/* {isModalOpen && ( */}

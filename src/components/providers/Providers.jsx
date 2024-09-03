@@ -19,10 +19,7 @@ const TokenSetter = () => {
 const Providers = ({ children }) => {
     return (
         <QueryClientProviderWrapper>
-            <SessionProvider>
-                {children}
-                <TokenSetter />
-            </SessionProvider>
+            {children}
         </QueryClientProviderWrapper>
     )
 }

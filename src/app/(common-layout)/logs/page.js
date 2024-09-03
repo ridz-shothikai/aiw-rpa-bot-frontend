@@ -7,7 +7,7 @@ import { MdOutlineArrowBack } from "react-icons/md";
 import { AiOutlineEye } from "react-icons/ai"; // Import an eye icon for viewing
 import { useCallApi } from '../../../lib/api';
 import moment from 'moment';
-import { Pagination, Popover } from 'antd';
+import { Pagination, Popover, Spin } from 'antd';
 import { IoMdCheckmark } from "react-icons/io";
 import { GoDotFill } from "react-icons/go";
 import { IoMdClose } from "react-icons/io";
@@ -72,46 +72,54 @@ const ErrorLogs = () => {
                     </button>
                 </div>
 
-                <div className="overflow-x-auto">
-                    <table className="min-w-full bg-white border">
-                        <thead className="bg-gray-300">
-                            <tr>
-                                <th className="py-2 px-4 border-b text-center">Date</th>
-                                <th className="py-2 px-4 border-b text-center">Error Log</th>
-                                <th className="py-2 px-4 border-b text-center">Error Screen</th> {/* New column */}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {logsData?.data?.map((log, index) => (
-                                <tr key={index}>
-                                    <td className="py-2 px-4 border-b text-center">
-                                        {moment(log.updatedAt).format('DD/MM/YYYY, HH:mm:ss')}</td>
-                                    <td className="py-2 px-4 border-b text-center max-w-96 truncate">
-                                        <Popover
-                                            content={() => (
-                                                <div className="max-w-96">
+                {isLogsPending ? (
+                    <div className='h-[80vh] flex justify-center items-center'>
+                        <Spin size="large" />
+                    </div>
+                ) : (
+                    <>
+                        <div className="overflow-x-auto">
+                            <table className="min-w-full bg-white border">
+                                <thead className="bg-gray-300">
+                                    <tr>
+                                        <th className="py-2 px-4 border-b text-center">Date</th>
+                                        <th className="py-2 px-4 border-b text-center">Error Log</th>
+                                        <th className="py-2 px-4 border-b text-center">Error Screen</th> {/* New column */}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {logsData?.data?.map((log, index) => (
+                                        <tr key={index}>
+                                            <td className="py-2 px-4 border-b text-center">
+                                                {moment(log.updatedAt).format('DD/MM/YYYY, HH:mm:ss')}</td>
+                                            <td className="py-2 px-4 border-b text-center max-w-96 truncate">
+                                                <Popover
+                                                    content={() => (
+                                                        <div className="max-w-96">
+                                                            {log.error_message}
+                                                        </div>
+                                                    )}
+                                                    placement="top"
+                                                    arrow={false}
+                                                >
                                                     {log.error_message}
-                                                </div>
-                                            )}
-                                            placement="top"
-                                            arrow={false}
-                                        >
-                                            {log.error_message}
-                                        </Popover>
-                                    </td>
-                                    <td className="py-2 px-4 border-b text-center">
-                                        <button onClick={() => window.open(log?.error_image)}>
-                                            <AiOutlineEye size={20} className="text-blue-500 hover:text-blue-700" />
-                                        </button>
-                                    </td> {/* Icon for viewing the error screen */}
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-                <div className='flex justify-end pt-4'>
-                    <Pagination current={page} onChange={onChange} pageSize={20} total={logsData?.pagination?.totalItems} showSizeChanger={false} />
-                </div>
+                                                </Popover>
+                                            </td>
+                                            <td className="py-2 px-4 border-b text-center">
+                                                <button onClick={() => window.open(log?.error_image)}>
+                                                    <AiOutlineEye size={20} className="text-blue-500 hover:text-blue-700" />
+                                                </button>
+                                            </td> {/* Icon for viewing the error screen */}
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div className='flex justify-end pt-4'>
+                            <Pagination current={page} onChange={onChange} pageSize={20} total={logsData?.pagination?.totalItems} showSizeChanger={false} />
+                        </div>
+                    </>
+                )}
             </div>
 
             {/* Modal Component for Diagnoses */}
