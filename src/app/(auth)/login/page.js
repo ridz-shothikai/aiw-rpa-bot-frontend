@@ -44,7 +44,7 @@ const LoginPage = () => {
       <div>
         <div className="shadow-xl rounded-lg m-10 p-8 md:ml-2 bg-[#f9f9f9]">
           <div className="flex justify-center mb-5">
-            <img src="/assets/logo.png" alt="brand-logo" />
+            <img src="/assets/doTechLogo.png" className="w-48" alt="brand-logo" />
           </div>
           <h1 className="text-center font-bold text-3xl text-[#441151] mb-10">
             Login to your account
@@ -116,7 +116,7 @@ const LoginPage = () => {
           </form>
           <div className="mt-5 flex flex-col items-center justify-center">
             <p className="text-sm font-normal">Powered By</p>
-            <img src="/assets/logo.png" width={70} height={48} alt="brand-logo-small" />
+            <img src="/assets/doTechLogo.png" className="w-16" alt="brand-logo-small" />
           </div>
         </div>
       </div>
