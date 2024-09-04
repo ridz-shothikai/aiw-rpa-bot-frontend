@@ -91,14 +91,15 @@ const Home = () => {
             ))}
 
             <div className="bg-white border border-gray-300 flex-1 rounded-lg p-4 shadow-md cursor-pointer transition-shadow duration-150 ease-in-out hover:shadow-lg active:shadow-xl focus:outline-none space-y-1 flex flex-col justify-center">
-              <div className="flex items-center gap-2">
+              <div className="flex gap-2">
                 <Badge
                   status={"processing"}
                   text="Live"
                   color="red"
+                  className="min-w-10"
                 />
                 <p className={`font-semibold m-0`}>
-                  {liveStatus?.data?.action?.split(" ")?.map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(" ")}
+                  {liveStatus?.data?.action?.split(" ")?.map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(" ")} 
                 </p>
               </div>
               <p className="text-gray-700 m-0">

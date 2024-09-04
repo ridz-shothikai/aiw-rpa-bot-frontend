@@ -7,7 +7,6 @@ import useAuth from "../hooks/useAuth";
 
 export default function Navbar() {
     const { user, logout } = useAuth();
-    console.log(user)
 
     return (
         <nav className="bg-white fixed top-0 flex h-18 w-full justify-between px-8 shadow">
