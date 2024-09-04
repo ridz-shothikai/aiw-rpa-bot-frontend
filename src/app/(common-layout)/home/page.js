@@ -186,7 +186,7 @@ const Home = () => {
                               <div className="max-w-96 space-y-2">
                                 {account?.process_status?.map(item => (
                                   <div className="flex items-center gap-2">
-                                    {item?.status ? <img src="/assets/blueTick.png" alt="Tick" className="w-5 h-5 mr-3" /> : <img src="/assets/cross.png" alt="Cross" className="w-5 h-5 mr-3" />}
+                                    {(item?.status || account?.processState === "Approved") ? <img src="/assets/blueTick.png" alt="Tick" className="w-5 h-5 mr-3" /> : <img src="/assets/cross.png" alt="Cross" className="w-5 h-5 mr-3" />}
                                     {item?.name === "initiated" && <span>Initiated at {moment(account?.initiatedDate).format('MM/DD/YYYY hh:mm A')}</span>}
                                     {item?.name === "scrapped" && <span>Scrapped at {moment(account?.initiatedDate).format('MM/DD/YYYY hh:mm A')}</span>}
                                     {item?.name === "nid_verify" && <span>NID verified at {moment(account?.initiatedDate).format('MM/DD/YYYY hh:mm A')}</span>}
@@ -196,10 +196,11 @@ const Home = () => {
                               </div>
                             )}
                             placement="right"
-                          >
+                          > 
+                          {/* if account?.processState === "Approved", then show check mark for all */}
                             <div className="flex justify-center items-center">
                               {account?.process_status?.map(item => (
-                                item?.status ? <img src="/assets/blueTick.png" alt="Tick" className="w-5 h-5 mr-3" /> : <img src="/assets/cross.png" alt="Cross" className="w-5 h-5 mr-3" />
+                                (item?.status || account?.processState === "Approved") ? <img src="/assets/blueTick.png" alt="Tick" className="w-5 h-5 mr-3" /> : <img src="/assets/cross.png" alt="Cross" className="w-5 h-5 mr-3" />
                               ))}
                             </div>
                           </Popover>
