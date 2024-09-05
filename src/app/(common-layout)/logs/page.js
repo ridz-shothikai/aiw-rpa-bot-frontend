@@ -7,7 +7,7 @@ import { MdOutlineArrowBack } from "react-icons/md";
 import { AiOutlineEye } from "react-icons/ai"; // Import an eye icon for viewing
 import { useCallApi } from '../../../lib/api';
 import moment from 'moment';
-import { Pagination, Popover, Spin } from 'antd';
+import { Button, Pagination, Popover, Spin } from 'antd';
 import { IoMdCheckmark } from "react-icons/io";
 import { GoDotFill } from "react-icons/go";
 import { IoMdClose } from "react-icons/io";
@@ -65,13 +65,13 @@ const ErrorLogs = () => {
 
                     <h1 className="text-2xl font-bold">Error Logs</h1>
                     <button
-                        onClick={() => setIsModalOpen(true)}
+                        onClick={() => openImageModal()}
                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                     >
                         Diagnose
                     </button>
                 </div>
-                {console.log(isLogsPending, logsData)}
+
                 {isLogsPending ? (
                     <div className='h-[80vh] flex justify-center items-center'>
                         <Spin size="large" />
@@ -107,10 +107,10 @@ const ErrorLogs = () => {
                                                     </Popover>
                                                 </td>
                                                 <td className="py-2 px-4 border-b text-center">
-                                                    <button onClick={() => window.open(log?.error_image)}>
+                                                    <button onClick={() => openImageModal(log?.error_image)}>
                                                         <AiOutlineEye size={20} className="text-blue-500 hover:text-blue-700" />
                                                     </button>
-                                                </td> {/* Icon for viewing the error screen */}
+                                                </td>
                                             </tr>
                                         ))}
                                     </tbody>
@@ -133,17 +133,28 @@ const ErrorLogs = () => {
             {/* Modal Component for Diagnoses */}
             <Modal
                 isOpen={isModalOpen}
-                onRequestClose={() => setIsModalOpen(false)}
-                className="bg-white rounded-lg shadow-lg max-w-md mx-auto my-16 p-6 outline-none"
+                onRequestClose={() => {
+                    setIsModalOpen(false);
+                    setSelectedImage(null);
+                }}
+                className={`bg-white rounded-lg shadow-lg ${selectedImage ? "max-w-xl" : "max-w-md"} mx-auto my-16 p-6 outline-none`}
                 overlayClassName="fixed inset-0 bg-gray-800 bg-opacity-50"
             >
                 <div className="flex justify-between items-center mb-4">
                     <h2 className="text-xl font-bold">{selectedImage ? 'Error Screen' : 'Diagnosis Status'}</h2>
-                    <button onClick={() => setIsModalOpen(false)} className="text-gray-500 hover:text-gray-800">&times;</button>
+                    <Button
+                        type='text'
+                        icon={<IoMdClose size={20} />}
+                        className='text-gray-500'
+                        onClick={() => {
+                            setIsModalOpen(false);
+                            setSelectedImage(null);
+                        }}
+                    />
                 </div>
 
                 {selectedImage ? (
-                    <img src={selectedImage} alt="Error Screen" className="w-full h-auto mb-4" />
+                    <img src={`data:image/png;base64,${selectedImage}`} alt="Error Screen" className="w-full h-auto mb-4" />
                 ) : (
                     <div className="mb-4">
                         {diagnosisResults.map((result, index) => (
