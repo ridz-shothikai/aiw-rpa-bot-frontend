@@ -1,10 +1,13 @@
 import React from 'react';
 
-export default function SearchBar({ onSearch, accountNo, setAccountNo, input, setInput }) {
+export default function SearchBar({ accountNo, setAccountNo, input, setInput }) {
     return (
         <form
             className="flex items-center"
-            onSubmit={onSearch}
+            onSubmit={(e) => {
+                e.preventDefault();
+                setAccountNo(input);
+            }}
         >
             <label htmlFor="simple-search" className="sr-only">Search</label>
             <div className="relative w-full">
@@ -13,7 +16,6 @@ export default function SearchBar({ onSearch, accountNo, setAccountNo, input, se
                     id="simple-search"
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="Search Account No."
-                    required
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                 />

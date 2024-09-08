@@ -8,6 +8,10 @@ const http = axios.create({
   // timeout: 5000, // request timeout
 });
 
+const httpBot = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_BOT_API_URI
+});
+
 // Request interceptors
 http.interceptors.request.use(
   (config) => {
@@ -27,5 +31,21 @@ http.interceptors.request.use(
   }
 );
 
+httpBot.interceptors.request.use(
+  (config) => {
+    if (typeof window === "undefined") return config;
+
+    const accessToken = localStorage.getItem("accessToken");
+    if (accessToken) {
+      config.headers["Authorization"] = `Bearer ${accessToken}`;
+    }
+
+    return config;
+  },
+  (error) => {
+    Promise.reject(error);
+  }
+);
+
 // export
-export { http };
+export { http, httpBot };

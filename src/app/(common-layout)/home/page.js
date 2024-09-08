@@ -2,12 +2,15 @@
 
 import React, { useState } from "react";
 import Navbar from "../../../components/Navbar"; // Adjust the import path based on your project structure
-import { Badge, DatePicker, Pagination, Popover, Space, Spin } from "antd";
+import { Badge, Button, DatePicker, message, Pagination, Popover, Space, Spin } from "antd";
 import SearchBar from "../../../components/SearchBar"; // Adjust the import path
-import { useCallApi } from "../../../lib/api";
+import { useCallApi, useCallApiWithNewToken } from "../../../lib/api";
 import "antd/dist/reset.css";
 import Link from "next/link";
 import moment from "moment";
+import { VscDebugStart } from "react-icons/vsc";
+import { IoStopCircleOutline } from "react-icons/io5";
+import { http, httpBot } from "../../../lib/http";
 
 const { RangePicker } = DatePicker;
 
@@ -18,7 +21,14 @@ const Home = () => {
   const [page, setPage] = useState(1);
   const [accountNo, setAccountNo] = useState("");
   const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [messageApi, contextHolder] = message.useMessage();
 
+  const { data: botStatus, isPending: isBotStatusPending, refetch: refetchBotStatus } = useCallApiWithNewToken(
+    `bot/status`,
+    [`bot-status`],
+    2000
+  );
   const { data: statsData, isPending: isStatsPending, refetch: refetchStats } = useCallApi(
     `api/report/total-count`,
     [`total-count`],
@@ -35,15 +45,17 @@ const Home = () => {
     5000
   );
 
+  const handleShowStatus = (type, message) => {
+    messageApi.open({
+      type: type,
+      content: message,
+      duration: 5
+    });
+  };
+
   const rangePresets = [
     // Add your date presets here if needed
   ];
-
-  const handleSearch = (event) => {
-    event.preventDefault();
-    const query = event.target.elements["simple-search"].value;
-    console.log("Search query:", query);
-  };
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -63,16 +75,42 @@ const Home = () => {
     }
   }
 
+  const handleStartBot = async () => {
+    setIsLoading(true);
+    try {
+      const res = await httpBot.post(`bot/start`);
+      refetchBotStatus();
+      handleShowStatus("success", 'Bot started successfully!');
+    } catch (error) {
+      handleShowStatus("error", "Sorry! Couldn't start the bot. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  const handleStopBot = async () => {
+    setIsLoading(true);
+    try {
+      const res = await httpBot.post(`bot/stop`);
+      refetchBotStatus();
+      handleShowStatus("success", 'Bot stopped successfully!');
+    } catch (error) {
+      handleShowStatus("error", "Sorry! Couldn't stop the bot. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   return (
     <div className="bg-gray-200">
+      {contextHolder}
       <Navbar />
       <div className="min-h-screen px-8">
         <div className="min-h-screen">
-          <div className="flex flex-wrap justify-between pt-[90px] pb-[60px] gap-[100px] ">
+          <div className="flex flex-wrap justify-between pt-[90px] pb-[60px] gap-[30px] ">
             {statsData?.data?.map((stat) => (
               <button
                 className="bg-white border border-gray-300 flex-1 rounded-lg p-4 shadow-md cursor-pointer transition-shadow duration-150 ease-in-out hover:shadow-lg active:shadow-xl focus:outline-none"
-                onClick={() => console.log("Approved clicked")}
               >
                 <div className={`
                    ${stat?._id === "Approved" && "text-green-600"} 
@@ -99,12 +137,37 @@ const Home = () => {
                   className="min-w-10"
                 />
                 <p className={`font-semibold m-0`}>
-                  {liveStatus?.data?.action?.split(" ")?.map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(" ")} 
+                  {liveStatus?.data?.action?.split(" ")?.map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(" ")}
                 </p>
               </div>
               <p className="text-gray-700 m-0">
                 {liveStatus?.data?.status}
               </p>
+            </div>
+            {/* Bot status */}
+            <div className="bg-white border border-gray-300 flex-1 rounded-lg p-4 shadow-md cursor-pointer transition-shadow duration-150 ease-in-out hover:shadow-lg active:shadow-xl focus:outline-none space-y-2 flex flex-col justify-center">
+              <div className="flex gap-2">
+                <Badge
+                  status={"processing"}
+                  text={isBotStatusPending ? "Loading Bot Status:" : "Bot Status:"}
+                  color={botStatus?.status === "stopped" ? "red" : "green"}
+                  className="min-w-10"
+                />
+                <p className={`font-semibold m-0`}>
+                  {isBotStatusPending ? "True" : botStatus?.status?.split(" ")?.map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(" ")}
+                </p>
+              </div>
+              <Button
+                type="primary"
+                size="middle"
+                icon={botStatus?.status === "stopped" ? <VscDebugStart /> : <IoStopCircleOutline />}
+                loading={isLoading}
+                disabled={isLoading || isBotStatusPending}
+                onClick={botStatus?.status === "stopped" ? handleStartBot : handleStopBot}
+                className="w-max"
+              >
+                {botStatus?.status === "stopped" ? "Start Bot" : "Stop Bot"}
+              </Button>
             </div>
           </div>
 
@@ -121,7 +184,7 @@ const Home = () => {
               </Space>
             </div>
             <div className="flex items-center gap-4">
-              <SearchBar onSearch={handleSearch} accountNo={accountNo} setAccountNo={setAccountNo} input={input} setInput={setInput} />
+              <SearchBar accountNo={accountNo} setAccountNo={setAccountNo} input={input} setInput={setInput} />
               <button
                 onClick={openModal}
                 className="bg-blue-500 hover:bg-blue-800 text-white rounded-md px-4 py-2 flex items-center ms-4"
@@ -197,8 +260,8 @@ const Home = () => {
                               </div>
                             )}
                             placement="right"
-                          > 
-                          {/* if account?.processState === "Approved", then show check mark for all */}
+                          >
+                            {/* if account?.processState === "Approved", then show check mark for all */}
                             <div className="flex justify-center items-center">
                               {account?.process_status?.map(item => (
                                 (item?.status || account?.processState === "Approved") ? <img src="/assets/blueTick.png" alt="Tick" className="w-5 h-5 mr-3" /> : <img src="/assets/cross.png" alt="Cross" className="w-5 h-5 mr-3" />
